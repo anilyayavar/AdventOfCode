@@ -18,6 +18,8 @@ input_mat %>%
          Ver_2 = complex(real = row, imaginary = col)) %>% 
   select(-(1:2)) -> edges
 
+# Part-II
+
 #row_folding
 
 reduce(1:4, .init = edges,
