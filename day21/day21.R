@@ -23,3 +23,6 @@ day21_1 <- function(init){
 }
 # for sample
 day21_1(c(4,8))
+
+# for part-1
+day21_1(c(8,2))
