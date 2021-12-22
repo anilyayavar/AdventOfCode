@@ -15,11 +15,11 @@ day21_1 <- function(init){                                           # Only argu
            ~ {p <- (.y + 1 + (cumsum(.x) -1 ) %% 10); 
            f <- (1 + (p -1) %% 10); 
            cumsum(f)}) %>% 
-      reduce(rbind)
+      reduce(rbind)                                                  # interleave both players' scores back to one vector
     if (n %% 2 == 0){
-      p1 <- score[n]
+      p1 <- score[n]                                                 # update output score
     } else {
-      p2 <- score[n]
+      p2 <- score[n]                                                 # update output score
     }
     if (p1 >= 1000 | p2 >= 1000) print(3 * n * score[n-1])           # for every move die is rolled thrice
     n <- n + 1
