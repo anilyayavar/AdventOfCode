@@ -1,6 +1,6 @@
 library(tidyverse)
 
-#Day 1
+# -------Day 1: The Tyranny of the Rocket Equation-----
 input <- readLines('Previous Years/2019/input1.txt')
 
 # part-1
@@ -25,7 +25,9 @@ answer1_2 <- function(input){
 
 answer1_2(input)
 
-#### ............DAY 2 ...........####
+##################################################################################################################################
+
+#--- Day 2: 1202 Program Alarm ---
 
 input <- readLines('Previous Years/2019/input2.txt') %>% str_split(',') %>% unlist %>% as.integer()
 
@@ -91,3 +93,45 @@ answer2_2 <- function(input){
 }
 
 answer2_2(input)
+
+
+###############################################################################################################################
+
+#### Day3
+
+# TO BE DONE
+
+
+#############################################################################################################################
+
+### ---Day 4 SECURE CONTAINER---
+
+#part-1
+answer4_1 <- function(){
+  x <- map_lgl(152085:670283,
+               ~ {y <- str_split(as.character(.x), '') %>% 
+                 unlist %>% 
+                 as.numeric() %>% 
+                 diff ;
+               all(y >= 0) & any(y == 0)
+               })
+  sum(x)
+}
+
+answer4_1()
+
+# part-2 
+answer4_2 <- function(){
+  x <- map_lgl(152085:670283,
+               ~{y <- str_split(as.character(.x), '') %>% 
+                 unlist;
+               (2 %in% rle(y)$lengths) & all(diff(as.integer(y)) >= 0)})
+  sum(x)
+}
+
+answer4_2()
+
+############################################################################
+
+#--- Day 5: Sunny with a Chance of Asteroids ---
+
