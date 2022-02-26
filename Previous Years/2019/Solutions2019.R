@@ -138,14 +138,58 @@ answer4_2()
 
 #--- Day 8: Space Image Format ---
 
+# part-1
 input8 <- readLines('Previous Years/2019/input8.txt')
-answer8_1 <- function(input8){
+answer8_1 <- function(input8, pixels = 150){
   input_mat <- input8 %>% str_split('') %>% 
     unlist %>% 
     as.integer() %>% 
-    matrix(byrow = T, ncol = 150)
+    matrix(byrow = T, ncol = pixels)
   layer <- input_mat[rowSums(input_mat == 0) %>% which.min(),]
   sum(layer == 1)*sum(layer==2)
 }
+
+answer8_1(input8)
+answer8_1('0222112222120000', pixels = 4)
+
+
+#part-2
+# install.packages('reshape2')
+library(reshape2)
+
+answer8_2 <- function(input8, width = 25, length = 6){
+  input_mat <- input8 %>% str_split('') %>% 
+    unlist %>% 
+    as.integer() %>% 
+    matrix(byrow = F, nrow = width*length)
+  
+  # 150 pixels are in rows, layers in cols
+  # split pixels for each layer
+  
+  m <- map_int(unname(split(input_mat, seq(150))), ~ .x[which.max(.x != 2)]) %>% 
+    matrix(byrow = T, ncol = 25)
+  
+  # final plot
+  melt(m) %>% 
+    subset(value == 1) %>% 
+    ggplot(aes(Var2, Var1)) +
+    geom_point(size = 2, fill = "blue", shape = 21) +
+    scale_y_reverse()
+  
+}
+
+answer8_2(input8)
+#LRFKU
+
+#---------------------------------------
+
+
+
+
+
+
+
+
+
 
 
