@@ -98,4 +98,27 @@ answer3_2 <- function(input){
 }
 
 answer3_2(input)
+#################################################################
 
+### day-4
+
+library(digest)
+answer4_1 <- function(first_part){
+  second_part <- 1
+  while(!startsWith(digest(paste0(first_part, second_part), algo = 'md5', serialize = FALSE), '00000')){
+    second_part <- second_part + 1
+  }
+  second_part
+}
+
+answer4_1('ckczppom')
+
+answer4_2 <- function(first_part){
+  second_part <- 1
+  while(!startsWith(digest(paste0(first_part, second_part), algo = 'md5', serialize = FALSE), '000000')){
+    second_part <- second_part + 1
+  }
+  second_part
+}
+
+answer4_2('ckczppom')

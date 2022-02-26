@@ -13,6 +13,10 @@ library(tidyverse)
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
+``` r
+library(digest)
+```
+
 ## Day 1
 
 ### Not Quite Lisp
@@ -44,6 +48,7 @@ answer1_1(input)
 answer1_2 <- function(input){
   input_vec <- input %>% str_split('') %>% unlist
   floors <- c(-1, 1)[1+(input_vec == '(')]
+  # answer
   which.max(cumsum(floors)<0)
 }
 
@@ -103,6 +108,8 @@ answer2_2(input)
 
 ### Day 3 Perfectly Spherical Houses in a Vacuum
 
+#### Part-1
+
 ``` r
 input <- readLines('input3.txt')
 ```
@@ -121,7 +128,7 @@ answer3_1 <- function(input){
                              ifelse(input_vec == '^', 1i, -1i)))
   
   input_vec <- c(0+0i, input_vec)
-  
+  # answer
   length(unique(cumsum(input_vec)))
 }
 
@@ -130,7 +137,7 @@ answer3_1(input)
 
     ## [1] 2572
 
-# part-2
+#### Part-2
 
 ``` r
 answer3_2 <- function(input){
@@ -154,4 +161,38 @@ answer3_2(input)
 
     ## [1] 2631
 
-------------------------------------------------------------------------
+### Day-4
+
+### The Ideal Stocking Stuffer
+
+#### Part-1
+
+``` r
+answer4_1 <- function(first_part){
+  second_part <- 1
+  while(!startsWith(digest(paste0(first_part, second_part), algo = 'md5', serialize = FALSE), '00000')){
+    second_part <- second_part + 1
+  }
+  second_part
+}
+
+answer4_1('ckczppom')
+```
+
+    ## [1] 117946
+
+#### Part-2
+
+``` r
+answer4_2 <- function(first_part){
+  second_part <- 1
+  while(!startsWith(digest(paste0(first_part, second_part), algo = 'md5', serialize = FALSE), '000000')){
+    second_part <- second_part + 1
+  }
+  second_part
+}
+
+answer4_2('ckczppom')
+```
+
+    ## [1] 3938038
