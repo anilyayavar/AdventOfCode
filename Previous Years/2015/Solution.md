@@ -19,7 +19,7 @@ library(digest)
 
 ## Day 1
 
-### Not Quite Lisp
+### [Not Quite Lisp](https://adventofcode.com/2015/day/1)
 
 #### part-1
 
@@ -59,7 +59,7 @@ answer1_2(input)
 
 ## Day2
 
-### Day 2 I Was Told There Would Be No Math
+### [I Was Told There Would Be No Math](https://adventofcode.com/2015/day/2)
 
 #### part-1
 
@@ -106,7 +106,9 @@ answer2_2(input)
 
     ## [1] 3842356
 
-### Day 3 Perfectly Spherical Houses in a Vacuum
+### Day 3
+
+### [Perfectly Spherical Houses in a Vacuum](https://adventofcode.com/2015/day/3)
 
 #### Part-1
 
@@ -163,7 +165,7 @@ answer3_2(input)
 
 ### Day-4
 
-### The Ideal Stocking Stuffer
+### [The Ideal Stocking Stuffer](https://adventofcode.com/2015/day/4)
 
 #### Part-1
 
@@ -196,3 +198,31 @@ answer4_2('ckczppom')
 ```
 
     ## [1] 3938038
+
+### Day 5
+
+### [Doesn’t He Have Intern-Elves For This?](https://adventofcode.com/2015/day/5)
+
+#### Part-1
+
+``` r
+input <- readLines('input5.txt')
+answer5_1 <- function(input){
+  # vowels
+  rule1_st <- c('a', 'e', 'i', 'o', 'u')
+  # check for at least 3 vowels
+  rule1 <- map_lgl(str_split(input, '') , ~ sum(.x %in% rule1_st) >= 3)
+  # check for repeated alphabets
+  rule2 <- map_lgl(str_split(input, ''), function(.a)any(map_lgl(seq(length(.a)-1), ~.a[.x]==.a[.x+1])))
+  # rule 3 exclusion strings
+  rule3_st <- c('ab', 'cd', 'pq', 'xy')
+  # check for exclusions
+  rule3 <- !map_lgl(input, function(.a)any(map_lgl(rule3_st, ~str_detect(.a, .x))))
+  # answer (nice strings)
+  sum(rule1 & rule2 & rule3)
+}
+
+answer5_1(input)
+```
+
+    ## [1] 258

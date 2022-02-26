@@ -122,3 +122,34 @@ answer4_2 <- function(first_part){
 }
 
 answer4_2('ckczppom')
+
+##################################
+input <- readLines('Previous Years/2015/input5.txt')
+rule1_st <- c('a', 'e', 'i', 'o', 'u')
+rule1 <- map_lgl(str_split(input, '') , ~ sum(.x %in% rule1_st) >= 3)
+
+rule2 <- map_lgl(str_split(input, ''), function(.a)any(map_lgl(seq(length(.a)-1), ~.a[.x]==.a[.x+1])))
+
+rule3_st <- c('ab', 'cd', 'pq', 'xy')
+rule3 <- !map_lgl(input, function(.a)any(map_lgl(rule3_st, ~str_detect(.a, .x))))
+
+sum(rule1 & rule2 & rule3)
+
+
+input <- 'qjhvhtzxzqqjkmpb'
+
+rule1 <- input %>% 
+  str_split('') %>% 
+  map(function(.a) map_chr(seq(length(.a)-1), ~ paste0(.a[.x], .a[.x+1]) )) %>% 
+  map_lgl( ~ any(table(.x) >=2))
+
+rule2 <- map_lgl(str_split(input, ''), function(.a)any(map_lgl(seq(length(.a)-2), ~.a[.x]==.a[.x+2])))
+
+
+sum(rule1 & rule2)
+input[5]
+
+
+
+
+any(table(c('ad', 'ac', 'ad')) >= 2)
