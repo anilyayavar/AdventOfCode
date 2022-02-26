@@ -135,3 +135,17 @@ answer4_2()
 
 #--- Day 5: Sunny with a Chance of Asteroids ---
 
+
+#--- Day 8: Space Image Format ---
+
+input8 <- readLines('Previous Years/2019/input8.txt')
+answer8_1 <- function(input8){
+  input_mat <- input8 %>% str_split('') %>% 
+    unlist %>% 
+    as.integer() %>% 
+    matrix(byrow = T, ncol = 150)
+  layer <- input_mat[rowSums(input_mat == 0) %>% which.min(),]
+  sum(layer == 1)*sum(layer==2)
+}
+
+
