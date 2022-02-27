@@ -15,13 +15,14 @@ library(tidyverse)
 
 ``` r
 library(digest)
+library(unglue)
 ```
 
-## Day 1
+### Day 1
 
 ### [Not Quite Lisp](https://adventofcode.com/2015/day/1)
 
-#### part-1
+#### Part-1
 
 ``` r
 input <- readLines('input1.txt')
@@ -57,11 +58,11 @@ answer1_2(input)
 
     ## [1] 1795
 
-## Day2
+### Day2
 
 ### [I Was Told There Would Be No Math](https://adventofcode.com/2015/day/2)
 
-#### part-1
+#### Part-1
 
 ``` r
 input <- readLines('input2.txt')
@@ -85,7 +86,7 @@ answer2_1(input)
 
     ## [1] 1606483
 
-#### part-2
+#### Part-2
 
 ``` r
 answer2_2 <- function(input){
@@ -226,3 +227,100 @@ answer5_1(input)
 ```
 
     ## [1] 258
+
+#### Part-2
+
+### Day 6
+
+### [Day 6: Probably a Fire Hazard](https://adventofcode.com/2015/day/6)
+
+#### Part-1
+
+``` r
+input <- readLines('input6.txt')
+
+answer6_1 <- function(input){
+  
+  # first define a helper function
+  my_fun <- function(.x, .y){
+    if (.y$ins == 'turn on'){
+      .x[seq(.y$x1 +1, .y$x2 +1, 1), seq(.y$y1 +1, .y$y2 +1, 1)] <- TRUE
+      .x
+    } else if (.y$ins == 'turn off'){
+      .x[seq(.y$x1 +1, .y$x2 +1, 1), seq(.y$y1 +1, .y$y2 +1, 1)] <- FALSE
+      .x
+    } else {
+      .x[seq(.y$x1 +1, .y$x2 +1, 1), seq(.y$y1 +1, .y$y2 +1, 1)] <- !(.x[seq(.y$x1 +1, .y$x2 +1, 1), seq(.y$y1 +1, .y$y2 +1, 1)])
+      .x
+    }
+  }
+  
+  # read the input properly
+  patterns <- '{ins} {x1=\\d+},{y1=\\d+} through {x2=\\d+},{y2=\\d+}'
+  input_inst <- unglue::unglue(input, patterns, convert = TRUE)
+  
+  #prepare initial configuration of lights
+  mat <- matrix(FALSE, nrow = 1000, ncol=1000)
+  
+  #iteration
+  output <- reduce(input_inst, .init = mat,
+       my_fun)
+  
+  # answer
+  sum(output)
+  
+}
+
+answer6_1(input)
+```
+
+    ## [1] 400410
+
+#### Part-2
+
+It has good usage of r’s `pmax` function
+
+``` r
+input <- readLines('input6.txt')
+
+answer6_2 <- function(input){
+  
+  # first define a helper function
+  my_fun <- function(.x, .y){
+    if (.y$ins == 'turn on'){
+      .x[seq(.y$x1 +1, .y$x2 +1, 1), seq(.y$y1 +1, .y$y2 +1, 1)] <- .x[seq(.y$x1 +1, .y$x2 +1, 1), seq(.y$y1 +1, .y$y2 +1, 1)] + 1L
+      .x
+    } else if (.y$ins == 'turn off'){
+      .x[seq(.y$x1 +1, .y$x2 +1, 1), seq(.y$y1 +1, .y$y2 +1, 1)] <- pmax(0, .x[seq(.y$x1 +1, .y$x2 +1, 1), seq(.y$y1 +1, .y$y2 +1, 1)] -1L)
+      .x
+    } else {
+      .x[seq(.y$x1 +1, .y$x2 +1, 1), seq(.y$y1 +1, .y$y2 +1, 1)] <- (.x[seq(.y$x1 +1, .y$x2 +1, 1), seq(.y$y1 +1, .y$y2 +1, 1)]) + 2L
+      .x
+    }
+  }
+  
+  # read the input properly
+  patterns <- '{ins} {x1=\\d+},{y1=\\d+} through {x2=\\d+},{y2=\\d+}'
+  input_inst <- unglue::unglue(input, patterns, convert = TRUE)
+  
+  #prepare initial configuration of lights
+  mat <- matrix(FALSE, nrow = 1000, ncol=1000)
+  
+  #iteration
+  output <- reduce(input_inst, .init = mat,
+       my_fun)
+  
+  # answer
+  sum(output)
+}
+
+answer6_2(input)
+```
+
+    ## [1] 15343601
+
+### Day-7
+
+### [Day 7: Some Assembly Required](https://adventofcode.com/2015/day/7)
+
+#### Part-1

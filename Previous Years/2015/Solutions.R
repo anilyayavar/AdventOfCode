@@ -136,8 +136,8 @@ rule3 <- !map_lgl(input, function(.a)any(map_lgl(rule3_st, ~str_detect(.a, .x)))
 sum(rule1 & rule2 & rule3)
 
 
-input <- 'qjhvhtzxzqqjkmpb'
 
+## some errors to be resolved
 rule1 <- input %>% 
   str_split('') %>% 
   map(function(.a) map_chr(seq(length(.a)-1), ~ paste0(.a[.x], .a[.x+1]) )) %>% 
@@ -150,6 +150,23 @@ sum(rule1 & rule2)
 input[5]
 
 
+########################
+
+input <- readLines('Previous Years/2015/input6.txt')
+input
+
+patterns <- '{ins} {x1=\\d+},{y1=\\d+} through {x2=\\d+},{y2=\\d+}'
+
+input_inst <- unglue::unglue(input, patterns, convert = TRUE)
+
+mat <- matrix(FALSE, nrow = 1000, ncol=1000)
+
+input_inst
+mat[seq(input_inst[[k]]$x1 +1, input_inst[[k]]$x2+1),]
 
 
-any(table(c('ad', 'ac', 'ad')) >= 2)
+#----------
+input <- readLines('Previous Years/2015/input7.txt')
+patterns <- '{var1=[a-z]*} {op=[A-Z]+} {var2=[a-z]*}{amt=\\d*} -> {var}'
+
+unglue::unglue(input, patterns = patterns)
