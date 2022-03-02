@@ -525,10 +525,10 @@ answer13_2(input)
 ``` r
 input <- readLines('input14.txt')
 
-answer14_1 <- function(input, time=2503){
+answer14_1 <- function(input, time=2503L){
   
   patterns = '{name} can fly {fly} km/s for {time_fly} seconds, but then must rest for {time_rest} seconds.'
-  dat <- unglue_data(input, patterns = patterns, convert = TRUE)
+  dat <- unglue::unglue_data(input, patterns = patterns, convert = TRUE)
   # let's create a helper function
   my_fun <- function(.x){
     x <- c(rep(dat$fly[.x], dat$time_fly[.x]), rep(0, dat$time_rest[.x]))
@@ -546,3 +546,32 @@ answer14_1(input)
 ```
 
     ## [1] 2660
+
+#### Part-2
+
+``` r
+answer14_2 <- function(input, time=2503L){
+  
+  patterns = '{name} can fly {fly} km/s for {time_fly} seconds, but then must rest for {time_rest} seconds.'
+  dat <- unglue::unglue_data(input, patterns = patterns, convert = TRUE)
+  # let's create a helper function
+  mat_gen <- function(reindeer, step){
+    x <- c(rep(dat$fly[reindeer], dat$time_fly[reindeer]), rep(0, dat$time_rest[reindeer]))
+    y <- (time %/% (dat$time_fly[reindeer]+dat$time_rest[reindeer]))+1
+    z <- rep(x, y)[seq_len(time)]
+    z[step]
+  }
+  # create a matrix for steps taken after each second
+  my_mat <- outer(seq(nrow(dat)), seq(time), Vectorize(mat_gen))
+  
+  # cumulative positive
+  pos <- t(apply(my_mat, 1, cumsum))
+  
+  # final answer
+  t(apply(apply(pos, 2, function(x) x == max(x)), 1, cumsum))[, time]
+}
+
+answer14_2(input)
+```
+
+    ## [1]  469  188  589 1256  158  307    9    0  504
