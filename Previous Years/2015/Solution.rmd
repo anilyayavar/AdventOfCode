@@ -293,3 +293,44 @@ answer6_2(input)
 
 ```
 
+
+### Day-8
+
+
+### Day-9
+
+
+### Day-10
+
+### [--- Day 10: Elves Look, Elves Say ---](https://adventofcode.com/2015/day/10)
+
+#### Part-1
+```{r}
+answer10_1 <- function(input){
+  nchar(reduce(1:40, .init = input, ~ .x %>% str_split('') %>%                # used purrr::reduce instead of for loop just for personal liking  
+  unlist %>% 
+  rle %>%                                                                     # used base r's rle function
+  {c(rbind(as.character(.$lengths), .$values))} %>%                           # interleaved two vectors by c and rbind
+    paste0(collapse = '')))                                                   # pasted them back
+}
+
+answer10_1('1113122113')
+```
+
+#### Part-II
+```{r}
+answer10_2 <- function(input){
+  nchar(reduce(1:50, .init = input, ~ .x %>% str_split('') %>% 
+  unlist %>% 
+  rle %>% 
+  {c(rbind(as.character(.$lengths), .$values))} %>% 
+    paste0(collapse = '')))
+}
+
+answer10_2('1113122113')
+```
+
+
+
+### Day-11
+### [--- Day 11: Corporate Policy ---](https://adventofcode.com/2015/day/11)

@@ -159,10 +159,28 @@ patterns <- '{ins} {x1=\\d+},{y1=\\d+} through {x2=\\d+},{y2=\\d+}'
 
 input_inst <- unglue::unglue(input, patterns, convert = TRUE)
 
-mat <- matrix(FALSE, nrow = 1000, ncol=1000)
+mat <- matrix(0L, nrow = 1000, ncol=1000)
 
-input_inst
-mat[seq(input_inst[[k]]$x1 +1, input_inst[[k]]$x2+1),]
+output <- reduce(input_inst, .init = mat,
+       my_fun)
+
+sum(output)
+
+my_fun <- function(.x, .y){
+  if (.y$ins == 'turn on'){
+    .x[seq(.y$x1 +1, .y$x2 +1, 1), seq(.y$y1 +1, .y$y2 +1, 1)] <- .x[seq(.y$x1 +1, .y$x2 +1, 1), seq(.y$y1 +1, .y$y2 +1, 1)] +1L
+    .x
+  } else if (.y$ins == 'turn off'){
+    .x[seq(.y$x1 +1, .y$x2 +1, 1), seq(.y$y1 +1, .y$y2 +1, 1)] <- pmax(0L, .x[seq(.y$x1 +1, .y$x2 +1, 1), seq(.y$y1 +1, .y$y2 +1, 1)] -1L)
+    .x
+  } else {
+    .x[seq(.y$x1 +1, .y$x2 +1, 1), seq(.y$y1 +1, .y$y2 +1, 1)] <- (.x[seq(.y$x1 +1, .y$x2 +1, 1), seq(.y$y1 +1, .y$y2 +1, 1)]) +2L
+    .x
+  }
+}
+
+
+pmax(matrix(c(-1:2), 2) -1, 0)
 
 
 #----------
