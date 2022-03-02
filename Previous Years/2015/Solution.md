@@ -515,3 +515,34 @@ answer13_2(input)
 ```
 
     ## [1] 640
+
+### Day-14
+
+### [— Day 14: Reindeer Olympics —](https://adventofcode.com/2015/day/13)
+
+#### Part-1
+
+``` r
+input <- readLines('input14.txt')
+
+answer14_1 <- function(input, time=2503){
+  
+  patterns = '{name} can fly {fly} km/s for {time_fly} seconds, but then must rest for {time_rest} seconds.'
+  dat <- unglue_data(input, patterns = patterns, convert = TRUE)
+  # let's create a helper function
+  my_fun <- function(.x){
+    x <- c(rep(dat$fly[.x], dat$time_fly[.x]), rep(0, dat$time_rest[.x]))
+    y <- (time %/% (dat$time_fly[.x]+dat$time_rest[.x]))+1
+    z <- rep(x, y)
+    
+    cumsum(z)[time]
+    
+  }
+  
+  max(map_dbl(seq(nrow(dat)), ~my_fun(.x)))
+}
+
+answer14_1(input)
+```
+
+    ## [1] 2660
