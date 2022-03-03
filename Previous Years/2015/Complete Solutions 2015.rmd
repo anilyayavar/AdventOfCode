@@ -13,10 +13,9 @@ library(unglue)
 ```
 
 ### Day 1
-### [Not Quite Lisp](https://adventofcode.com/2015/day/1)
+### [--- Not Quite Lisp ---](https://adventofcode.com/2015/day/1)
 
 #### Part-1
-
 ```{r}
 input <- readLines('input1.txt')
 # part-1
@@ -29,7 +28,7 @@ answer1_1 <- function(input){
 answer1_1(input)
 ```
 
-#### part-2
+#### Part-2
 ```{r}
 answer1_2 <- function(input){
   input_vec <- input %>% str_split('') %>% unlist
@@ -43,10 +42,9 @@ answer1_2(input)
 
 
 ### Day2
-### [I Was Told There Would Be No Math](https://adventofcode.com/2015/day/2)
+### [--- I Was Told There Would Be No Math ---](https://adventofcode.com/2015/day/2)
 
 #### Part-1
-
 ```{r}
 input <- readLines('input2.txt')
 
@@ -69,7 +67,6 @@ answer2_1(input)
 
 
 #### Part-2
-
 ```{r}
 answer2_2 <- function(input){
   input_list <- input %>% 
@@ -88,9 +85,8 @@ answer2_2(input)
 ```
 
 
-
 ### Day 3 
-### [Perfectly Spherical Houses in a Vacuum](https://adventofcode.com/2015/day/3) 
+### [--- Perfectly Spherical Houses in a Vacuum ---](https://adventofcode.com/2015/day/3) 
 
 #### Part-1
 ```{r}
@@ -114,7 +110,6 @@ answer3_1(input)
 ```
 
 #### Part-2
-
 ```{r}
 answer3_2 <- function(input){
   input_vec <- input %>% 
@@ -137,7 +132,7 @@ answer3_2(input)
 
 
 ### Day-4 
-### [The Ideal Stocking Stuffer](https://adventofcode.com/2015/day/4)
+### [--- The Ideal Stocking Stuffer ---](https://adventofcode.com/2015/day/4)
 
 #### Part-1
 ```{r}
@@ -150,11 +145,9 @@ answer4_1 <- function(first_part){
 }
 
 answer4_1('ckczppom')
-
 ```
 
 #### Part-2
-
 ```{r}
 answer4_2 <- function(first_part){
   second_part <- 1
@@ -168,10 +161,9 @@ answer4_2('ckczppom')
 ```
 
 ### Day 5
-### [Doesn't He Have Intern-Elves For This?](https://adventofcode.com/2015/day/5)
+### [--- Doesn't He Have Intern-Elves For This? ---](https://adventofcode.com/2015/day/5)
 
 #### Part-1
-
 ```{r}
 input <- readLines('input5.txt')
 answer5_1 <- function(input){
@@ -193,14 +185,13 @@ answer5_1(input)
 ```
 
 #### Part-2
-
 ```{r}
 
 ```
 
 
 ### Day 6
-### [Day 6: Probably a Fire Hazard](https://adventofcode.com/2015/day/6)
+### [--- Day 6: Probably a Fire Hazard ---](https://adventofcode.com/2015/day/6)
 
 #### Part-1
 ```{r}
@@ -235,11 +226,9 @@ answer6_1 <- function(input){
   
   # answer
   sum(output)
-  
 }
 
 answer6_1(input)
-
 ```
 
 #### Part-2
@@ -285,10 +274,9 @@ answer6_2(input)
 
 
 ### Day-7
-### [Day 7: Some Assembly Required](https://adventofcode.com/2015/day/7)
+### [--- Day 7: Some Assembly Required ---](https://adventofcode.com/2015/day/7)
 
 #### Part-1
-
 ```{r}
 
 ```
@@ -317,7 +305,7 @@ answer10_1 <- function(input){
 answer10_1('1113122113')
 ```
 
-#### Part-II
+#### Part-2
 ```{r}
 answer10_2 <- function(input){
   nchar(reduce(1:50, .init = input, ~ .x %>% str_split('') %>% 
@@ -336,7 +324,6 @@ answer10_2('1113122113')
 ### [--- Day 11: Corporate Policy ---](https://adventofcode.com/2015/day/11)
 
 #### Part-1
-
 ```{r}
 
 ```
@@ -361,7 +348,6 @@ answer12_1(input)
 ```
 
 #### Part-2
-
 ```{r}
 
 ```
@@ -372,7 +358,6 @@ answer12_1(input)
 ### [--- Day 13: Knights of the Dinner Table ---](https://adventofcode.com/2015/day/13)
 
 #### Part-1
-
 ```{r}
 input <- readLines('input13.txt')
 
@@ -384,7 +369,6 @@ answer13_1 <- function(input){
     mutate(happiness = ifelse(op == 'lose', happiness*-1, happiness))
   
   x <- unique(dat$V1)[-1]                                                                # since seating arrangements are circular assume Alice sitting first
-  
   
   h_list = list()
   counter <- 1
@@ -506,7 +490,6 @@ answer14_1 <- function(input, time=2503L){
     z <- rep(x, y)
     
     cumsum(z)[time]
-    
   }
   
   max(map_dbl(seq(nrow(dat)), ~my_fun(.x)))
@@ -547,7 +530,6 @@ answer14_2(input)
 ### [--- Day 15: Science for Hungry People ---](https://adventofcode.com/2015/day/15)
 
 #### Part-1
-
 ```{r}
 input <- readLines('input15.txt')
 
@@ -614,13 +596,10 @@ answer15_2(input)
 ```
 
 
-
-
 ### Day-16
 ### [--- Day 16: Aunt Sue ---](https://adventofcode.com/2015/day/16)
 
 #### Part-1
-
 ```{r}
 input <- readLines('input16.txt')
 
@@ -657,7 +636,6 @@ answer16_1 <- function(input){
                             na.rm = T)
                  ) ==3
         )
-  
 }
 
 answer16_1(input)
@@ -712,7 +690,6 @@ answer16_2(input)
 ### [--- Day 17: No Such Thing as Too Much ---](https://adventofcode.com/2015/day/17)
 
 #### Part-1
-
 ```{r}
 input <- readLines('input17.txt')
 
@@ -733,7 +710,6 @@ answer17_1(input)
 ```
 
 #### Part-2
-
 ```{r}
 answer17_2 <- function(input){
   # clean input
@@ -758,7 +734,6 @@ answer17_2(input)
 ### [--- Day 18: Like a GIF For Your Yard ---](https://adventofcode.com/2015/day/18)
 
 #### Part-1
-
 ```{r}
 input <- readLines('input18.txt')
 answer18_1 <- function(input, iterations = 100){
@@ -771,33 +746,10 @@ answer18_1 <- function(input, iterations = 100){
   
   # Define neighborhood function
   neighbors <- function(i, j, input_mat){
-    n <- nrow(input_mat)
-    if(i==1){
-      if(j==1){
-        c(input_mat[1,2], input_mat[2,2], input_mat[2,1])
-      } else if (j==n){
-        c(input_mat[1,n-1], input_mat[2,n-1], input_mat[2,n])
-      } else {
-        c(input_mat[2,j], input_mat[2, j+1], input_mat[2, j-1], input_mat[1, j+1], input_mat[1, j-1])
-      }
-    } else if (i==n){
-      if(j==1){
-        c(input_mat[n,2], input_mat[n-1,2], input_mat[n-1,1])
-      } else if (j==n){
-        c(input_mat[n,n-1], input_mat[n-1,n-1], input_mat[n-1,n])
-      } else {
-        c(input_mat[n-1,j], input_mat[n-1, j+1], input_mat[n-1, j-1], input_mat[n, j+1], input_mat[n, j-1])
-      }
-    } else if (j ==1) {
-      c(input_mat[i,2], input_mat[i-1,2], input_mat[i-1,1], input_mat[i+1, 1], input_mat[i+1, 2])
-    } else if (j ==n) {
-      c(input_mat[i,n-1], input_mat[i-1,n-1], input_mat[i-1,n], input_mat[i+1, n-1], input_mat[i+1, n])
-    } else {
-      c(input_mat[i, j+1], input_mat[i, j-1], 
-        input_mat[i+1, j], input_mat[i-1, j], 
-        input_mat[i-1, j-1], input_mat[i-1, j+1], 
-        input_mat[i+1, j-1], input_mat[i+1, j+1])
-    }
+    # prepare a grid of neigborhood indices
+    g <- setdiff(expand.grid((i-1):(i+1), (j-1):(j+1)), expand.grid(i, j))
+    # neighbourhood values
+    unlist(pmap(g, ~ tryCatch(input_mat[c(...)[1], c(...)[2]], error = function(e) NULL)))
   }
   
   # Define mutating lights for one_iteration helper function
@@ -836,9 +788,7 @@ answer18_1(input)
 ```
 
 #### Part-2
-
 **Explanation** - From the part-1 this one differs in corners only.  So `one_iteration` function has been suitably modified.
-
 ```{r}
 answer18_2 <- function(input, iterations = 100){
   
@@ -848,35 +798,12 @@ answer18_2 <- function(input, iterations = 100){
     unlist %>% 
     matrix(nrow = length(input), byrow = TRUE)
   
-  # Define neighborhood function
+    # Define neighborhood function 
   neighbors <- function(i, j, input_mat){
-    n <- nrow(input_mat)
-    if(i==1){
-      if(j==1){
-        c(input_mat[1,2], input_mat[2,2], input_mat[2,1])
-      } else if (j==n){
-        c(input_mat[1,n-1], input_mat[2,n-1], input_mat[2,n])
-      } else {
-        c(input_mat[2,j], input_mat[2, j+1], input_mat[2, j-1], input_mat[1, j+1], input_mat[1, j-1])
-      }
-    } else if (i==n){
-      if(j==1){
-        c(input_mat[n,2], input_mat[n-1,2], input_mat[n-1,1])
-      } else if (j==n){
-        c(input_mat[n,n-1], input_mat[n-1,n-1], input_mat[n-1,n])
-      } else {
-        c(input_mat[n-1,j], input_mat[n-1, j+1], input_mat[n-1, j-1], input_mat[n, j+1], input_mat[n, j-1])
-      }
-    } else if (j ==1) {
-      c(input_mat[i,2], input_mat[i-1,2], input_mat[i-1,1], input_mat[i+1, 1], input_mat[i+1, 2])
-    } else if (j ==n) {
-      c(input_mat[i,n-1], input_mat[i-1,n-1], input_mat[i-1,n], input_mat[i+1, n-1], input_mat[i+1, n])
-    } else {
-      c(input_mat[i, j+1], input_mat[i, j-1], 
-        input_mat[i+1, j], input_mat[i-1, j], 
-        input_mat[i-1, j-1], input_mat[i-1, j+1], 
-        input_mat[i+1, j-1], input_mat[i+1, j+1])
-    }
+    # prepare a grid of neigborhood indices
+    g <- setdiff(expand.grid((i-1):(i+1), (j-1):(j+1)), expand.grid(i, j))
+    # neighbourhood values
+    unlist(pmap(g, ~ tryCatch(input_mat[c(...)[1], c(...)[2]], error = function(e) NULL)))
   }
   
   # Define mutating lights for one_iteration helper function
@@ -915,6 +842,96 @@ answer18_2 <- function(input, iterations = 100){
 }
 
 answer18_2(input)
+```
+
+### Day-19
+### [--- Day 19: Medicine for Rudolph ---](https://adventofcode.com/2015/day/19)
+
+#### Part-1
+```{r}
+
+```
+#### Part-2
+```{r}
+
+```
+
+
+### Day-20
+### [--- Day 20: Infinite Elves and Infinite Houses ---](https://adventofcode.com/2015/day/20)
+
+#### Part-1
+```{r}
+
+```
+#### Part-2
+```{r}
+
+```
+
+
+### Day-21
+### [--- Day 21: RPG Simulator 20XX ---](https://adventofcode.com/2015/day/21)
+
+#### Part-1
+```{r}
+
+```
+#### Part-2
+```{r}
+
+```
+
+
+### Day-22
+### [--- Day 22: Wizard Simulator 20XX ---](https://adventofcode.com/2015/day/22)
+
+#### Part-1
+```{r}
+
+```
+#### Part-2
+```{r}
+
+```
+
+
+### Day-23
+### [--- Day 23: Opening the Turing Lock ---](https://adventofcode.com/2015/day/23)
+
+#### Part-1
+```{r}
+
+```
+#### Part-2
+```{r}
+
+```
+
+
+### Day-24
+### [--- Day 24: It Hangs in the Balance ---](https://adventofcode.com/2015/day/24)
+
+#### Part-1
+```{r}
+
+```
+#### Part-2
+```{r}
+
+```
+
+
+### Day-25
+### [--- Day 25: Let It Snow ---](https://adventofcode.com/2015/day/25)
+
+#### Part-1
+```{r}
+
+```
+#### Part-2
+```{r}
+
 ```
 
 

@@ -811,33 +811,10 @@ answer18_1 <- function(input, iterations = 100){
   
   # Define neighborhood function
   neighbors <- function(i, j, input_mat){
-    n <- nrow(input_mat)
-    if(i==1){
-      if(j==1){
-        c(input_mat[1,2], input_mat[2,2], input_mat[2,1])
-      } else if (j==n){
-        c(input_mat[1,n-1], input_mat[2,n-1], input_mat[2,n])
-      } else {
-        c(input_mat[2,j], input_mat[2, j+1], input_mat[2, j-1], input_mat[1, j+1], input_mat[1, j-1])
-      }
-    } else if (i==n){
-      if(j==1){
-        c(input_mat[n,2], input_mat[n-1,2], input_mat[n-1,1])
-      } else if (j==n){
-        c(input_mat[n,n-1], input_mat[n-1,n-1], input_mat[n-1,n])
-      } else {
-        c(input_mat[n-1,j], input_mat[n-1, j+1], input_mat[n-1, j-1], input_mat[n, j+1], input_mat[n, j-1])
-      }
-    } else if (j ==1) {
-      c(input_mat[i,2], input_mat[i-1,2], input_mat[i-1,1], input_mat[i+1, 1], input_mat[i+1, 2])
-    } else if (j ==n) {
-      c(input_mat[i,n-1], input_mat[i-1,n-1], input_mat[i-1,n], input_mat[i+1, n-1], input_mat[i+1, n])
-    } else {
-      c(input_mat[i, j+1], input_mat[i, j-1], 
-        input_mat[i+1, j], input_mat[i-1, j], 
-        input_mat[i-1, j-1], input_mat[i-1, j+1], 
-        input_mat[i+1, j-1], input_mat[i+1, j+1])
-    }
+    # prepare a grid of neigborhood indices
+    g <- setdiff(expand.grid((i-1):(i+1), (j-1):(j+1)), expand.grid(i, j))
+    # neighbourhood values
+    unlist(pmap(g, ~ tryCatch(input_mat[c(...)[1], c(...)[2]], error = function(e) NULL)))
   }
   
   # Define mutating lights for one_iteration helper function
@@ -891,35 +868,12 @@ answer18_2 <- function(input, iterations = 100){
     unlist %>% 
     matrix(nrow = length(input), byrow = TRUE)
   
-  # Define neighborhood function
+    # Define neighborhood function 
   neighbors <- function(i, j, input_mat){
-    n <- nrow(input_mat)
-    if(i==1){
-      if(j==1){
-        c(input_mat[1,2], input_mat[2,2], input_mat[2,1])
-      } else if (j==n){
-        c(input_mat[1,n-1], input_mat[2,n-1], input_mat[2,n])
-      } else {
-        c(input_mat[2,j], input_mat[2, j+1], input_mat[2, j-1], input_mat[1, j+1], input_mat[1, j-1])
-      }
-    } else if (i==n){
-      if(j==1){
-        c(input_mat[n,2], input_mat[n-1,2], input_mat[n-1,1])
-      } else if (j==n){
-        c(input_mat[n,n-1], input_mat[n-1,n-1], input_mat[n-1,n])
-      } else {
-        c(input_mat[n-1,j], input_mat[n-1, j+1], input_mat[n-1, j-1], input_mat[n, j+1], input_mat[n, j-1])
-      }
-    } else if (j ==1) {
-      c(input_mat[i,2], input_mat[i-1,2], input_mat[i-1,1], input_mat[i+1, 1], input_mat[i+1, 2])
-    } else if (j ==n) {
-      c(input_mat[i,n-1], input_mat[i-1,n-1], input_mat[i-1,n], input_mat[i+1, n-1], input_mat[i+1, n])
-    } else {
-      c(input_mat[i, j+1], input_mat[i, j-1], 
-        input_mat[i+1, j], input_mat[i-1, j], 
-        input_mat[i-1, j-1], input_mat[i-1, j+1], 
-        input_mat[i+1, j-1], input_mat[i+1, j+1])
-    }
+    # prepare a grid of neigborhood indices
+    g <- setdiff(expand.grid((i-1):(i+1), (j-1):(j+1)), expand.grid(i, j))
+    # neighbourhood values
+    unlist(pmap(g, ~ tryCatch(input_mat[c(...)[1], c(...)[2]], error = function(e) NULL)))
   }
   
   # Define mutating lights for one_iteration helper function
