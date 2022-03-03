@@ -549,13 +549,68 @@ answer14_2(input)
 #### Part-1
 
 ```{r}
+input <- readLines('input15.txt')
 
+answer15_1 <- function(input){
+  patterns <- '{item}: capacity {capacity}, durability {durability}, flavor {flavor}, texture {texture}, calories {calories}'
+  
+  dat <- unglue::unglue_data(input, patterns = patterns, convert = TRUE)
+  
+  scores <- vector()
+  
+  for(i1 in 0:100){
+    for(i2 in 0:(100-i1)){
+      for(i3 in 0:(100-i1-i2)){
+        quantity <- c(i1, i2, i3, 100-(i1+i2+i3))
+        capacity <- max(sum(dat$capacity*quantity),0)
+        durability <- max(sum(dat$durability*quantity), 0)
+        flavor <- max(sum(dat$flavor*quantity), 0)
+        texture <- max(sum(dat$texture*quantity), 0)
+        cur_score <- capacity*durability*flavor*texture
+        scores <- append(scores, cur_score)
+      }
+    }
+  }
+  
+  max(scores)
+}
+
+answer15_1(input)
 ```
 
 #### Part-2
 
 ```{r}
+answer15_2 <- function(input){
+  
+  patterns <- '{item}: capacity {capacity}, durability {durability}, flavor {flavor}, texture {texture}, calories {calories}'
+  
+  dat <- unglue::unglue_data(input, patterns = patterns, convert = TRUE)
+  
+  scores <- vector()
+  
+  for(i1 in 0:100){
+    for(i2 in 0:(100-i1)){
+      for(i3 in 0:(100-i1-i2)){
+        quantity <- c(i1, i2, i3, 100-(i1+i2+i3))
+        calorie <- sum(quantity*dat$calories)
+        if (calorie == 500){
+          capacity <- max(sum(dat$capacity*quantity),0)
+          durability <- max(sum(dat$durability*quantity), 0)
+          flavor <- max(sum(dat$flavor*quantity), 0)
+          texture <- max(sum(dat$texture*quantity), 0)
+          cur_score <- capacity*durability*flavor*texture
+          scores <- append(scores, cur_score)
+        }
+      }
+    }
+  }
+  
+  max(scores)
+  
+}
 
+answer15_2(input)
 ```
 
 
