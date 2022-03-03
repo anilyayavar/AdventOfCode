@@ -799,4 +799,165 @@ answer17_2(input)
 
 #### Part-1
 
+``` r
+input <- readLines('input18.txt')
+answer18_1 <- function(input, iterations = 100){
+  
+  # clean input to a matrix format
+  input_mat <- input %>% 
+    str_split('') %>% 
+    unlist %>% 
+    matrix(nrow = length(input), byrow = TRUE)
+  
+  # Define neighborhood function
+  neighbors <- function(i, j, input_mat){
+    n <- nrow(input_mat)
+    if(i==1){
+      if(j==1){
+        c(input_mat[1,2], input_mat[2,2], input_mat[2,1])
+      } else if (j==n){
+        c(input_mat[1,n-1], input_mat[2,n-1], input_mat[2,n])
+      } else {
+        c(input_mat[2,j], input_mat[2, j+1], input_mat[2, j-1], input_mat[1, j+1], input_mat[1, j-1])
+      }
+    } else if (i==n){
+      if(j==1){
+        c(input_mat[n,2], input_mat[n-1,2], input_mat[n-1,1])
+      } else if (j==n){
+        c(input_mat[n,n-1], input_mat[n-1,n-1], input_mat[n-1,n])
+      } else {
+        c(input_mat[n-1,j], input_mat[n-1, j+1], input_mat[n-1, j-1], input_mat[n, j+1], input_mat[n, j-1])
+      }
+    } else if (j ==1) {
+      c(input_mat[i,2], input_mat[i-1,2], input_mat[i-1,1], input_mat[i+1, 1], input_mat[i+1, 2])
+    } else if (j ==n) {
+      c(input_mat[i,n-1], input_mat[i-1,n-1], input_mat[i-1,n], input_mat[i+1, n-1], input_mat[i+1, n])
+    } else {
+      c(input_mat[i, j+1], input_mat[i, j-1], 
+        input_mat[i+1, j], input_mat[i-1, j], 
+        input_mat[i-1, j-1], input_mat[i-1, j+1], 
+        input_mat[i+1, j-1], input_mat[i+1, j+1])
+    }
+  }
+  
+  # Define mutating lights for one_iteration helper function
+  one_iteration <- function(i, j, input_mat){
+    if(input_mat[i, j] == '#'){
+      if(sum(neighbors(i, j, input_mat = input_mat) == '#') %in% c(2,3)){
+        '#'
+      } else {
+        '.'
+      }
+    } else {
+      if(sum(neighbors(i, j, input_mat = input_mat) == '#') == 3){
+        '#'
+      } else {
+        '.'
+      } 
+    }
+  }
+  
+  # Vectorise the above helper function
+  one_iter_vec <- Vectorize(one_iteration, vectorize.args = c('i', 'j'))
+  
+  # Define another helper function to reduce the matrix of lights
+  my_fun <- function(.x, .y, input_mat){
+    outer(seq(nrow(input_mat)), seq(ncol(input_mat)), one_iter_vec, .x)
+  }
+  # saving the final lights configuration matrix
+  output<- reduce(seq(iterations), .init = input_mat, my_fun, input_mat) 
+  
+  # answer
+  sum(output == '#')  
+  
+}
+
+answer18_1(input)
+```
+
+    ## [1] 768
+
 #### Part-2
+
+**Explanation** - From the part-1 this one differs in corners only. So
+`one_iteration` function has been suitably modified.
+
+``` r
+answer18_2 <- function(input, iterations = 100){
+  
+  # clean input to a matrix format
+  input_mat <- input %>% 
+    str_split('') %>% 
+    unlist %>% 
+    matrix(nrow = length(input), byrow = TRUE)
+  
+  # Define neighborhood function
+  neighbors <- function(i, j, input_mat){
+    n <- nrow(input_mat)
+    if(i==1){
+      if(j==1){
+        c(input_mat[1,2], input_mat[2,2], input_mat[2,1])
+      } else if (j==n){
+        c(input_mat[1,n-1], input_mat[2,n-1], input_mat[2,n])
+      } else {
+        c(input_mat[2,j], input_mat[2, j+1], input_mat[2, j-1], input_mat[1, j+1], input_mat[1, j-1])
+      }
+    } else if (i==n){
+      if(j==1){
+        c(input_mat[n,2], input_mat[n-1,2], input_mat[n-1,1])
+      } else if (j==n){
+        c(input_mat[n,n-1], input_mat[n-1,n-1], input_mat[n-1,n])
+      } else {
+        c(input_mat[n-1,j], input_mat[n-1, j+1], input_mat[n-1, j-1], input_mat[n, j+1], input_mat[n, j-1])
+      }
+    } else if (j ==1) {
+      c(input_mat[i,2], input_mat[i-1,2], input_mat[i-1,1], input_mat[i+1, 1], input_mat[i+1, 2])
+    } else if (j ==n) {
+      c(input_mat[i,n-1], input_mat[i-1,n-1], input_mat[i-1,n], input_mat[i+1, n-1], input_mat[i+1, n])
+    } else {
+      c(input_mat[i, j+1], input_mat[i, j-1], 
+        input_mat[i+1, j], input_mat[i-1, j], 
+        input_mat[i-1, j-1], input_mat[i-1, j+1], 
+        input_mat[i+1, j-1], input_mat[i+1, j+1])
+    }
+  }
+  
+  # Define mutating lights for one_iteration helper function
+  one_iteration <- function(i, j, input_mat){
+    n <- nrow(input_mat)
+    if(input_mat[i, j] == '#'){
+      if ((i==1&j==1)|(i==1&j==n)|(i==n&j==1)|(i==n&j==n)){
+        '#'
+      } else if(sum(neighbors(i, j, input_mat = input_mat) == '#') %in% c(2,3)){
+        '#'
+      } else {
+        '.'
+      }
+    } else {
+      if(sum(neighbors(i, j, input_mat = input_mat) == '#') == 3){
+        '#'
+      } else {
+        '.'
+      } 
+    }
+  }
+  
+  # Vectorise the above helper function
+  one_iter_vec <- Vectorize(one_iteration, vectorize.args = c('i', 'j'))
+  
+  # Define another helper function to reduce the matrix of lights
+  my_fun <- function(.x, .y, input_mat){
+    outer(seq(nrow(input_mat)), seq(ncol(input_mat)), one_iter_vec, .x)
+  }
+  # saving the final lights configuration matrix
+  output<- reduce(seq(iterations), .init = input_mat, my_fun, input_mat) 
+  
+  # answer
+  sum(output == '#')  
+  
+}
+
+answer18_2(input)
+```
+
+    ## [1] 781
