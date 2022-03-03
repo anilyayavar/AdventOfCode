@@ -657,7 +657,93 @@ answer15_2(input)
 
 #### Part-1
 
+``` r
+input <- readLines('input16.txt')
+
+items <- read.table(text = 'children: 3
+cats: 7
+samoyeds: 2
+pomeranians: 3
+akitas: 0
+vizslas: 0
+goldfish: 5
+trees: 3
+cars: 2
+perfumes: 1', sep = ':')
+
+answer16_1 <- function(input){
+  # patterns for ungluing data input
+  patterns <- 'Sue {sue_no}: {item_1}: {itemcount_1}, {item_2}: {itemcount_2}, {item_3}: {itemcount_3}'
+  # read data
+  dat <- unglue::unglue_data(input, patterns = patterns, convert = TRUE)
+  # modify data to have all inputs
+  dat <- dat %>% 
+    pivot_longer(-c(sue_no), 
+                 names_to = c(".value", NA),
+                 names_pattern = "(.*)_(.*)"
+                 ) %>% 
+    pivot_wider(id_cols = sue_no, 
+                names_from = item, 
+                values_from = itemcount
+                )
+  
+  # final answer using purrr::pmap_int
+  which(
+    pmap_int(dat, ~ sum(c(...)[items$V1] == items$V2, 
+                            na.rm = T)
+                 ) ==3
+        )
+  
+}
+
+answer16_1(input)
+```
+
+    ## [1] 213
+
 #### Part-2
+
+``` r
+# modified input with extra column for condition
+items <- read.table(text = 'children: 3 : ==
+cats: 7 : >
+samoyeds: 2 : ==
+pomeranians: 3 : <
+akitas: 0 : ==
+vizslas: 0 : ==
+goldfish: 5 : <
+trees: 3 : >
+cars: 2 : ==
+perfumes: 1 : ==', sep = ':')
+
+answer16_2 <- function(input){
+  # define patterns for unglue
+  patterns <- 'Sue {sue_no}: {item_1}: {itemcount_1}, {item_2}: {itemcount_2}, {item_3}: {itemcount_3}'
+  # parse input into dataframe
+  dat <- unglue::unglue_data(input, patterns = patterns, convert = TRUE)
+  # modify dataframe by creating input for evry item
+  dat <- dat %>% 
+    pivot_longer(-c(sue_no), 
+                 names_to = c(".value", NA),
+                 names_pattern = "(.*)_(.*)") %>% 
+    pivot_wider(id_cols = sue_no, names_from = item, values_from = itemcount)
+  # this time to evaluate each expression using pmap_int and nested map_lgl using Vectorize and eval
+  pmap_int(dat, ~sum(map_lgl(parse(text = paste(c(...)[items$V1], 
+                                                items$V3, 
+                                                items$V2)
+                                   ), 
+                             Vectorize(eval)
+                             ), 
+                     na.rm = T
+                     )
+           ) %>% 
+    {which(.==3)}
+}
+
+answer16_2(input)
+```
+
+    ## [1] 323
 
 ### Day-17
 
@@ -665,7 +751,47 @@ answer15_2(input)
 
 #### Part-1
 
+``` r
+input <- readLines('input17.txt')
+
+answer17_1 <- function(input){
+  # clean input
+  containers <- input %>% as.integer()
+  # initiate an empty vector
+  combs <- vector()
+  # for loop
+  for(i in 2:length(containers)){
+    combs <- append(combs, sum(apply(combn(containers, i), 2, sum) == 150))
+  }
+  # answer
+  sum(combs)
+}
+
+answer17_1(input)
+```
+
+    ## [1] 654
+
 #### Part-2
+
+``` r
+answer17_2 <- function(input){
+  # clean input
+  containers <- input %>% as.integer()
+  # initiate an empty vector
+  combs <- vector()
+  # for loop
+  for(i in 2:length(containers)){
+    combs <- append(combs, sum(apply(combn(containers, i), 2, sum) == 150))
+  }
+  # answer
+  combs[which.max(combs > 0)]
+}
+
+answer17_2(input)
+```
+
+    ## [1] 57
 
 ### Day-18
 
