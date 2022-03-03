@@ -1,24 +1,36 @@
----
-title: "Advent of Code 2015"
-author: Anil Goyal
-output:
-  md_document:
-    variant: markdown_github
----
-
-```{r}
+``` r
 library(tidyverse)
+```
+
+    ## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
+
+    ## v ggplot2 3.3.5     v purrr   0.3.4
+    ## v tibble  3.1.5     v dplyr   1.0.7
+    ## v tidyr   1.2.0     v stringr 1.4.0
+    ## v readr   2.0.2     v forcats 0.5.1
+
+    ## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+    ## x dplyr::filter() masks stats::filter()
+    ## x dplyr::lag()    masks stats::lag()
+
+``` r
 library(digest)
 library(unglue)
 ```
 
 ### Day 1
+
 ### [Not Quite Lisp](https://adventofcode.com/2015/day/1)
 
 #### Part-1
 
-```{r}
+``` r
 input <- readLines('input1.txt')
+```
+
+    ## Warning in readLines("input1.txt"): incomplete final line found on 'input1.txt'
+
+``` r
 # part-1
 answer1_1 <- function(input){
   input_vec <- input %>% str_split('') %>% unlist
@@ -29,8 +41,11 @@ answer1_1 <- function(input){
 answer1_1(input)
 ```
 
+    ## [1] 74
+
 #### part-2
-```{r}
+
+``` r
 answer1_2 <- function(input){
   input_vec <- input %>% str_split('') %>% unlist
   floors <- c(-1, 1)[1+(input_vec == '(')]
@@ -41,13 +56,15 @@ answer1_2 <- function(input){
 answer1_2(input)
 ```
 
+    ## [1] 1795
 
 ### Day2
+
 ### [I Was Told There Would Be No Math](https://adventofcode.com/2015/day/2)
 
 #### Part-1
 
-```{r}
+``` r
 input <- readLines('input2.txt')
 
 #part-1
@@ -67,10 +84,11 @@ answer2_1 <- function(input){
 answer2_1(input)
 ```
 
+    ## [1] 1606483
 
 #### Part-2
 
-```{r}
+``` r
 answer2_2 <- function(input){
   input_list <- input %>% 
     str_split('x') %>% 
@@ -87,14 +105,21 @@ answer2_2 <- function(input){
 answer2_2(input)
 ```
 
+    ## [1] 3842356
 
+### Day 3
 
-### Day 3 
-### [Perfectly Spherical Houses in a Vacuum](https://adventofcode.com/2015/day/3) 
+### [Perfectly Spherical Houses in a Vacuum](https://adventofcode.com/2015/day/3)
 
 #### Part-1
-```{r}
+
+``` r
 input <- readLines('input3.txt')
+```
+
+    ## Warning in readLines("input3.txt"): incomplete final line found on 'input3.txt'
+
+``` r
 ## part-1
 answer3_1 <- function(input){
   input_vec <- input %>% 
@@ -113,9 +138,11 @@ answer3_1 <- function(input){
 answer3_1(input)
 ```
 
+    ## [1] 2572
+
 #### Part-2
 
-```{r}
+``` r
 answer3_2 <- function(input){
   input_vec <- input %>% 
     str_split('') %>% 
@@ -135,12 +162,15 @@ answer3_2 <- function(input){
 answer3_2(input)
 ```
 
+    ## [1] 2631
 
-### Day-4 
+### Day-4
+
 ### [The Ideal Stocking Stuffer](https://adventofcode.com/2015/day/4)
 
 #### Part-1
-```{r}
+
+``` r
 answer4_1 <- function(first_part){
   second_part <- 1
   while(!startsWith(digest(paste0(first_part, second_part), algo = 'md5', serialize = FALSE), '00000')){
@@ -150,12 +180,13 @@ answer4_1 <- function(first_part){
 }
 
 answer4_1('ckczppom')
-
 ```
+
+    ## [1] 117946
 
 #### Part-2
 
-```{r}
+``` r
 answer4_2 <- function(first_part){
   second_part <- 1
   while(!startsWith(digest(paste0(first_part, second_part), algo = 'md5', serialize = FALSE), '000000')){
@@ -167,12 +198,15 @@ answer4_2 <- function(first_part){
 answer4_2('ckczppom')
 ```
 
+    ## [1] 3938038
+
 ### Day 5
-### [Doesn't He Have Intern-Elves For This?](https://adventofcode.com/2015/day/5)
+
+### [Doesn’t He Have Intern-Elves For This?](https://adventofcode.com/2015/day/5)
 
 #### Part-1
 
-```{r}
+``` r
 input <- readLines('input5.txt')
 answer5_1 <- function(input){
   # vowels
@@ -192,18 +226,17 @@ answer5_1 <- function(input){
 answer5_1(input)
 ```
 
+    ## [1] 258
+
 #### Part-2
 
-```{r}
-
-```
-
-
 ### Day 6
+
 ### [Day 6: Probably a Fire Hazard](https://adventofcode.com/2015/day/6)
 
 #### Part-1
-```{r}
+
+``` r
 input <- readLines('input6.txt')
 
 answer6_1 <- function(input){
@@ -239,13 +272,15 @@ answer6_1 <- function(input){
 }
 
 answer6_1(input)
-
 ```
+
+    ## [1] 400410
 
 #### Part-2
 
-It has good usage of r's `pmax` function
-```{r}
+It has good usage of r’s `pmax` function
+
+``` r
 input <- readLines('input6.txt')
 
 answer6_2 <- function(input){
@@ -280,32 +315,27 @@ answer6_2 <- function(input){
 }
 
 answer6_2(input)
-
 ```
 
+    ## [1] 15343601
 
 ### Day-7
+
 ### [Day 7: Some Assembly Required](https://adventofcode.com/2015/day/7)
 
 #### Part-1
 
-```{r}
-
-```
-
-
 ### Day-8
-
 
 ### Day-9
 
-
 ### Day-10
 
-### [--- Day 10: Elves Look, Elves Say ---](https://adventofcode.com/2015/day/10)
+### [— Day 10: Elves Look, Elves Say —](https://adventofcode.com/2015/day/10)
 
 #### Part-1
-```{r}
+
+``` r
 answer10_1 <- function(input){
   nchar(reduce(1:40, .init = input, ~ .x %>% str_split('') %>%                # used purrr::reduce instead of for loop just for personal liking  
   unlist %>% 
@@ -317,8 +347,11 @@ answer10_1 <- function(input){
 answer10_1('1113122113')
 ```
 
+    ## [1] 360154
+
 #### Part-II
-```{r}
+
+``` r
 answer10_2 <- function(input){
   nchar(reduce(1:50, .init = input, ~ .x %>% str_split('') %>% 
   unlist %>% 
@@ -330,23 +363,21 @@ answer10_2 <- function(input){
 answer10_2('1113122113')
 ```
 
-
+    ## [1] 5103798
 
 ### Day-11
-### [--- Day 11: Corporate Policy ---](https://adventofcode.com/2015/day/11)
+
+### [— Day 11: Corporate Policy —](https://adventofcode.com/2015/day/11)
 
 #### Part-1
-
-```{r}
-
-```
-
 
 ### Day-12
-### [--- Day 12: JSAbacusFramework.io ---](https://adventofcode.com/2015/day/12)
+
+### [— Day 12: JSAbacusFramework.io —](https://adventofcode.com/2015/day/12)
 
 #### Part-1
-```{r}
+
+``` r
 input <- readLines('input11.txt')
 
 answer12_1 <- function(input){
@@ -357,23 +388,19 @@ answer12_1 <- function(input){
 }
 
 answer12_1(input)
-
 ```
+
+    ## [1] 111754
 
 #### Part-2
 
-```{r}
-
-```
-
-
-
 ### Day-13
-### [--- Day 13: Knights of the Dinner Table ---](https://adventofcode.com/2015/day/13)
+
+### [— Day 13: Knights of the Dinner Table —](https://adventofcode.com/2015/day/13)
 
 #### Part-1
 
-```{r}
+``` r
 input <- readLines('input13.txt')
 
 answer13_1 <- function(input){
@@ -427,8 +454,11 @@ answer13_1 <- function(input){
 answer13_1(input)
 ```
 
+    ## [1] 664
+
 ###$ Part-2
-```{r}
+
+``` r
 answer13_2 <- function(input){
   
   patterns = '{V1} would {op} {happiness} happiness units by sitting next to {V2}.'  # Pattern vector for unglue
@@ -484,15 +514,15 @@ answer13_2 <- function(input){
 answer13_2(input)
 ```
 
-
+    ## [1] 640
 
 ### Day-14
-### [--- Day 14: Reindeer Olympics ---](https://adventofcode.com/2015/day/13)
+
+### [— Day 14: Reindeer Olympics —](https://adventofcode.com/2015/day/13)
 
 #### Part-1
 
-```{r}
-
+``` r
 input <- readLines('input14.txt')
 
 answer14_1 <- function(input, time=2503L){
@@ -515,8 +545,11 @@ answer14_1 <- function(input, time=2503L){
 answer14_1(input)
 ```
 
+    ## [1] 2660
+
 #### Part-2
-```{r}
+
+``` r
 answer14_2 <- function(input, time=2503L){
   
   patterns = '{name} can fly {fly} km/s for {time_fly} seconds, but then must rest for {time_rest} seconds.'
@@ -541,3 +574,36 @@ answer14_2 <- function(input, time=2503L){
 answer14_2(input)
 ```
 
+    ## [1] 1256
+
+### Day-15
+
+### [— Day 15: Science for Hungry People —](https://adventofcode.com/2015/day/15)
+
+#### Part-1
+
+#### Part-2
+
+### Day-16
+
+### [— Day 16: Aunt Sue —](https://adventofcode.com/2015/day/16)
+
+#### Part-1
+
+#### Part-2
+
+### Day-17
+
+### [— Day 17: No Such Thing as Too Much —](https://adventofcode.com/2015/day/17)
+
+#### Part-1
+
+#### Part-2
+
+### Day-18
+
+### [— Day 18: Like a GIF For Your Yard —](https://adventofcode.com/2015/day/18)
+
+#### Part-1
+
+#### Part-2
