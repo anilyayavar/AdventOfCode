@@ -862,11 +862,47 @@ answer18_2(input)
 
 #### Part-1
 ```{r}
+answer20_1 <- function(target=29000000){
+  #define helper function
+  divisors <- function(number){
+    s <- seq_len(floor(sqrt(as.integer(number))))
+    small_divisors <- s[number %% s == 0]
+    small_sub <- small_divisors[(small_divisors^2) != as.integer(number)]
+    large_divisors <- as.integer(number)/small_sub
+    c(small_divisors, large_divisors)
+  }
+  # reset counter
+  counter <- 1
+  # initiate a while loop while realising that number of gifts per house is simply sum of all divisors multiplied by 10
+  while(sum(divisors(counter))< as.integer(target/10)){
+    counter <- counter +1
+  }
+  counter
+}
+answer20_1()
 
 ```
 #### Part-2
 ```{r}
-
+answer20_2 <- function(target=29000000){
+  #define helper function
+  divisors <- function(number){
+    s <- seq_len(floor(sqrt(as.integer(number))))
+    small_divisors <- s[number %% s == 0]
+    small_sub <- small_divisors[(small_divisors^2) != as.integer(number)]
+    large_divisors <- as.integer(number)/small_sub
+    divs <- c(small_divisors, large_divisors)
+    divs[number/divs <= 50]
+  }
+  # reset counter
+  counter <- 1
+  # initiate a while loop while realising that number of gifts per house is simply sum of all divisors multiplied by 11
+  while(sum(divisors(counter))< as.integer(target/11)){
+    counter <- counter +1
+  }
+  counter
+}
+answer20_2()
 ```
 
 

@@ -20,7 +20,7 @@ library(unglue)
 
 ### Day 1
 
-### [Not Quite Lisp](https://adventofcode.com/2015/day/1)
+### [— Not Quite Lisp —](https://adventofcode.com/2015/day/1)
 
 #### Part-1
 
@@ -43,7 +43,7 @@ answer1_1(input)
 
     ## [1] 74
 
-#### part-2
+#### Part-2
 
 ``` r
 answer1_2 <- function(input){
@@ -60,7 +60,7 @@ answer1_2(input)
 
 ### Day2
 
-### [I Was Told There Would Be No Math](https://adventofcode.com/2015/day/2)
+### [— I Was Told There Would Be No Math —](https://adventofcode.com/2015/day/2)
 
 #### Part-1
 
@@ -109,7 +109,7 @@ answer2_2(input)
 
 ### Day 3
 
-### [Perfectly Spherical Houses in a Vacuum](https://adventofcode.com/2015/day/3)
+### [— Perfectly Spherical Houses in a Vacuum —](https://adventofcode.com/2015/day/3)
 
 #### Part-1
 
@@ -166,7 +166,7 @@ answer3_2(input)
 
 ### Day-4
 
-### [The Ideal Stocking Stuffer](https://adventofcode.com/2015/day/4)
+### [— The Ideal Stocking Stuffer —](https://adventofcode.com/2015/day/4)
 
 #### Part-1
 
@@ -202,7 +202,7 @@ answer4_2('ckczppom')
 
 ### Day 5
 
-### [Doesn’t He Have Intern-Elves For This?](https://adventofcode.com/2015/day/5)
+### [— Doesn’t He Have Intern-Elves For This? —](https://adventofcode.com/2015/day/5)
 
 #### Part-1
 
@@ -232,7 +232,7 @@ answer5_1(input)
 
 ### Day 6
 
-### [Day 6: Probably a Fire Hazard](https://adventofcode.com/2015/day/6)
+### [— Day 6: Probably a Fire Hazard —](https://adventofcode.com/2015/day/6)
 
 #### Part-1
 
@@ -268,7 +268,6 @@ answer6_1 <- function(input){
   
   # answer
   sum(output)
-  
 }
 
 answer6_1(input)
@@ -321,7 +320,7 @@ answer6_2(input)
 
 ### Day-7
 
-### [Day 7: Some Assembly Required](https://adventofcode.com/2015/day/7)
+### [— Day 7: Some Assembly Required —](https://adventofcode.com/2015/day/7)
 
 #### Part-1
 
@@ -349,7 +348,7 @@ answer10_1('1113122113')
 
     ## [1] 360154
 
-#### Part-II
+#### Part-2
 
 ``` r
 answer10_2 <- function(input){
@@ -411,7 +410,6 @@ answer13_1 <- function(input){
     mutate(happiness = ifelse(op == 'lose', happiness*-1, happiness))
   
   x <- unique(dat$V1)[-1]                                                                # since seating arrangements are circular assume Alice sitting first
-  
   
   h_list = list()
   counter <- 1
@@ -536,7 +534,6 @@ answer14_1 <- function(input, time=2503L){
     z <- rep(x, y)
     
     cumsum(z)[time]
-    
   }
   
   max(map_dbl(seq(nrow(dat)), ~my_fun(.x)))
@@ -693,7 +690,6 @@ answer16_1 <- function(input){
                             na.rm = T)
                  ) ==3
         )
-  
 }
 
 answer16_1(input)
@@ -915,3 +911,106 @@ answer18_2(input)
 ```
 
     ## [1] 781
+
+### Day-19
+
+### [— Day 19: Medicine for Rudolph —](https://adventofcode.com/2015/day/19)
+
+#### Part-1
+
+#### Part-2
+
+### Day-20
+
+### [— Day 20: Infinite Elves and Infinite Houses —](https://adventofcode.com/2015/day/20)
+
+#### Part-1
+
+``` r
+answer20_1 <- function(target=29000000){
+  #define helper function
+  divisors <- function(number){
+    s <- seq_len(floor(sqrt(as.integer(number))))
+    small_divisors <- s[number %% s == 0]
+    small_sub <- small_divisors[(small_divisors^2) != as.integer(number)]
+    large_divisors <- as.integer(number)/small_sub
+    c(small_divisors, large_divisors)
+  }
+  # reset counter
+  counter <- 1
+  # initiate a while loop while realising that number of gifts per house is simply sum of all divisors multiplied by 10
+  while(sum(divisors(counter))< as.integer(target/10)){
+    counter <- counter +1
+  }
+  counter
+}
+answer20_1()
+```
+
+    ## [1] 665280
+
+#### Part-2
+
+``` r
+answer20_2 <- function(target=29000000){
+  #define helper function
+  divisors <- function(number){
+    s <- seq_len(floor(sqrt(as.integer(number))))
+    small_divisors <- s[number %% s == 0]
+    small_sub <- small_divisors[(small_divisors^2) != as.integer(number)]
+    large_divisors <- as.integer(number)/small_sub
+    divs <- c(small_divisors, large_divisors)
+    divs[number/divs <= 50]
+  }
+  # reset counter
+  counter <- 1
+  # initiate a while loop while realising that number of gifts per house is simply sum of all divisors multiplied by 11
+  while(sum(divisors(counter))< as.integer(target/11)){
+    counter <- counter +1
+  }
+  counter
+}
+answer20_2()
+```
+
+    ## [1] 705600
+
+### Day-21
+
+### [— Day 21: RPG Simulator 20XX —](https://adventofcode.com/2015/day/21)
+
+#### Part-1
+
+#### Part-2
+
+### Day-22
+
+### [— Day 22: Wizard Simulator 20XX —](https://adventofcode.com/2015/day/22)
+
+#### Part-1
+
+#### Part-2
+
+### Day-23
+
+### [— Day 23: Opening the Turing Lock —](https://adventofcode.com/2015/day/23)
+
+#### Part-1
+
+#### Part-2
+
+### Day-24
+
+### [— Day 24: It Hangs in the Balance —](https://adventofcode.com/2015/day/24)
+
+#### Part-1
+
+#### Part-2
+
+### Day-25
+
+### [— Day 25: Let It Snow —](https://adventofcode.com/2015/day/25)
+
+#### Part-1
+
+#### Part-2
