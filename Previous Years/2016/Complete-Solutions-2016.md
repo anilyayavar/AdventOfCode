@@ -19,7 +19,7 @@ library(unglue)
 
 ### Day 1
 
-### 
+### [— Day 1: No Time for a Taxicab —](https://adventofcode.com/2016/day/1)
 
 #### Part-1
 
@@ -27,8 +27,8 @@ library(unglue)
 numbers can be interpreted as two dimensional numbers. So I will use
 these as location of Santa. Needless to say real part will denote *x*
 coordinate and imaginary part will denote *y* coordinate. Since
-initially he is facing north, `.init` in `accumulate` has been used as
-`0+1i`
+initially he is facing north, `.init` in `purrr::accumulate` has been
+used as 0 + 1*i*.
 
 ``` r
 input <- readLines('input1.txt')
@@ -64,6 +64,11 @@ answer1_1(input)
     ## [1] 234
 
 #### Part-2
+
+**Explanation** - Here we need complete path travelled. We have
+directions to travel, initial point and final points. Using these values
+through `seq` of baser, I have build complete locations travelled using
+`purrr::map` and `unlist`. Last part is then easy.
 
 ``` r
 answer1_2 <- function(input){
@@ -102,3 +107,7 @@ answer1_2(input)
 ```
 
     ## [1] 113
+
+### Day-2
+
+### [— Day 2: Bathroom Security —](https://adventofcode.com/2016/day/2)
