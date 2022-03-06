@@ -111,3 +111,43 @@ answer1_2(input)
 ### Day-2
 
 ### [— Day 2: Bathroom Security —](https://adventofcode.com/2016/day/2)
+
+#### Part-1
+
+``` r
+input <- read_lines('input2.txt')
+
+answer2_1 <- function(input){
+  # initial position
+  init <- list(r=2, c=2)
+  # keypad map
+  keypad <- matrix(1:9, 3, byrow = TRUE)
+  # parse data
+  dat <- str_split(input, '')
+  # we need the end positions
+  pos <- map_int(dat, length)
+  # unlist the dat completely
+  dat <- dat %>% unlist
+  # define helper function
+  my_fun <- function(.x, .y){
+    if(.y == 'U'){
+      list(r=max(.x[['r']]-1, 1), c=.x[['c']])
+    } else if(.y == 'D'){
+      list(r=min(.x[['r']]+1, 3), c=.x[['c']])
+    } else if(.y == 'R'){
+      list(r=.x[['r']], c= min(.x[['c']]+1,3))
+    } else {
+      list(r=.x[['r']], c= max(.x[['c']]-1,1))
+    }
+  }
+  # positions
+  code <- accumulate(dat, .init = init, my_fun)[cumsum(pos) +1]
+  # answers
+  paste0(map_chr(code, ~keypad[.x$r, .x$c]), collapse = '') %>% 
+    as.integer()
+}
+
+answer2_1(input)
+```
+
+    ## [1] 24862
