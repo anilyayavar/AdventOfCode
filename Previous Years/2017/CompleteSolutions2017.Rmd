@@ -73,3 +73,164 @@ answer2_2 <- function(input){
 answer2_2(input)
 ```
 
+### Day-3
+### [--- Day 3: Spiral Memory ---](https://adventofcode.com/2017/day/3)
+
+#### Part-1
+```{r}
+answer3_1 <- function(input=312051){
+  # movement map function
+  my_fun <- function(.x){
+    if(.x %% 2 == 0){
+      rep(c(-1+0i,0-1i), each=.x)
+    } else {
+      rep(c(1+0i,0+1i), each=.x)
+    }
+  }
+  #we need to figure out that desired number is in floor(sqrt(input)) +1 th circle/spiral outwards
+  moves<-c(0+0i,unlist(map(seq_len(floor(sqrt(input)) + 1), my_fun)))
+  # position
+  pos <- cumsum(moves)
+  # access port location on imaginary numbers
+  access_port <- pos[input]
+  # manhattan distance
+  abs(Re(access_port))+abs(Im(access_port))
+}
+
+answer3_1()
+```
+
+#### Part-2
+Don't forget to check out [this sequence.](https://oeis.org/A141481)
+```{r}
+answer3_2 <- function(input=312051){
+  # define helper function
+  my_fun <- function(.x){
+    if(.x %% 2 == 0){
+      rep(c(-1+0i,0-1i), each=.x)
+    } else {
+      rep(c(1+0i,0+1i), each=.x)
+    }
+  }
+  # find moves similar to part-1
+  moves<-c(0+0i,unlist(map(seq_len(floor(sqrt(input)) + 1), my_fun)))
+  pos <- cumsum(moves)
+  # define a new function to get neighbors
+  get_neighbors <- function(.x){
+    n1 <- complex(real = Re(.x) +1, imaginary = Im(.x))
+    n2 <- complex(real = Re(.x) -1, imaginary = Im(.x))
+    n3 <- complex(real = Re(.x), imaginary = Im(.x)+1)
+    n4 <- complex(real = Re(.x), imaginary = Im(.x)-1)
+    n5 <- complex(real = Re(.x) +1, imaginary = Im(.x)+1)
+    n6 <- complex(real = Re(.x) -1, imaginary = Im(.x)-1)
+    n7 <- complex(real = Re(.x)-1, imaginary = Im(.x)+1)
+    n8 <- complex(real = Re(.x)+1, imaginary = Im(.x)-1)
+    unlist(mget(paste0('n',1:8)))
+  }
+  # let's start the desired sequence
+  my_seq <- c(1)
+  # first value as counter
+  n <- 1
+  # while loop
+  while(all(my_seq < input)){
+    x <- length(my_seq)
+    my_seq <- append(my_seq, sum(my_seq[which(pos[seq_len(x)] %in% get_neighbors(pos[x+1]))]))
+    n <- n+1
+  }
+  # answer
+  max(my_seq)
+}
+
+answer3_2(312051)
+```
+
+
+### Day-4
+### [--- Day 4: High-Entropy Passphrases ---](https://adventofcode.com/2017/day/4)
+
+#### Part-1
+```{r}
+input <- read_lines('input4.txt')
+
+answer4_1 <- function(input){
+  str_split(input, ' ') %>%                                                         # split the input
+  map_lgl(~ !any(duplicated(.x))) %>%                                               # count non-duplicated strings using purrr::map_lgl
+  sum()
+}
+answer4_1(input)
+```
+
+#### Part-2
+```{r}
+answer4_2 <- function(input){
+  str_split(input, ' ') %>% 
+  map_lgl(function(.a) !any(duplicated(str_split(.a, '') %>%                      # sort individual strings alphabetically before proceeding
+                                         map_chr(~ sort(.x) %>% 
+                                                   paste0(collapse = ''))))) %>% 
+  sum()
+}
+answer4_2(input)
+```
+
+### Day-5
+### [--- Day 5: A Maze of Twisty Trampolines, All Alike ---](https://adventofcode.com/2017/day/5)
+
+#### Part-1
+```{r}
+input <- read_lines('input5.txt') %>% as.integer()
+
+answer5_1 <- function(input){
+  my_seq <- input
+  jumps <- 0
+  pos <- 1
+  # initiate a while loop
+  while(pos <= length(my_seq)){
+    jumps <- jumps +1
+    new_pos <- pos + my_seq[pos]
+    my_seq[pos] <- my_seq[pos] +1
+    pos <- new_pos
+  }
+  # answer
+  jumps
+}
+answer5_1(input)
+```
+
+#### Part-2
+```{r}
+answer5_2 <- function(input){
+  my_seq <- input
+  jumps <- 0
+  pos <- 1
+  while(pos <= length(my_seq)){
+    jumps <- jumps +1
+    new_pos <- pos + my_seq[pos]
+    # extra condition in while loop
+    if (my_seq[pos]<3){
+      my_seq[pos] <- my_seq[pos] +1
+    } else {
+      my_seq[pos] <- my_seq[pos] -1
+    }
+    pos <- new_pos
+  }
+  # answer
+  jumps
+}
+
+answer5_2(input)
+```
+
+
+### Day-6
+### [--- Day 6: Memory Reallocation ---](https://adventofcode.com/2017/day/6)
+
+#### Part-1
+```{r}
+
+```
+
+#### Part-2
+```{r}
+
+```
+
