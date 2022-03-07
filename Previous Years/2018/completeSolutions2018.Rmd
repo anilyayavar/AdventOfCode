@@ -1,0 +1,76 @@
+---
+title: "Advent of Code 2018"
+author: Anil Goyal
+output:
+  md_document:
+    variant: markdown_github
+---
+
+```{r}
+library(tidyverse)
+library(unglue)
+```
+
+### Day 1
+### [--- Day 1: Chronal Calibration ---](https://adventofcode.com/2018/day/1)
+
+#### Part-1
+```{r}
+input <- read_lines('input1.txt')
+
+answer1_1 <- function(input){
+  input %>% 
+    as.integer() %>% 
+    sum()
+}
+
+answer1_1(input)
+```
+
+#### Part-2
+```{r}
+answer1_2 <- function(input){
+  freq <- input %>% as.integer()
+  # initiate while loop
+  while(!any(duplicated(cumsum(freq)))){
+    freq <- append(freq, freq)
+  }
+  # final answer
+  cumsum(freq)[which.max(duplicated(cumsum(freq)))]
+}
+
+answer1_2(input)
+```
+
+
+### Day-2
+### [--- Day 2: Inventory Management System ---](https://adventofcode.com/2018/day/2)
+
+#### Part-1
+```{r}
+input <- read_lines('input2.txt')
+
+answer2_1 <- function(input){
+  twos <- input %>% 
+    str_split('') %>% 
+    map_lgl(~ 2 %in% table(.x)) %>% 
+    sum()
+  
+  threes <- input %>% 
+    str_split('') %>% 
+    map_lgl(~ 3 %in% table(.x)) %>% 
+    sum() 
+  
+  twos * threes
+}
+
+answer2_1(input)
+```
+
+#### Part-2
+```{r}
+answer2_2 <- function(input){
+  
+}
+```
+

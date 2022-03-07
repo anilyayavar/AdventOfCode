@@ -327,3 +327,114 @@ answer6_2(input)
 ### Day-7
 
 ### [— Day 7: Recursive Circus —](https://adventofcode.com/2017/day/7)
+
+#### Part-1
+
+``` r
+input <- read_lines('input7.txt')
+
+answer7_1 <- function(input){
+  #patterns for unglue
+  patterns <- c('{node=\\w+} ({val=\\d+}) -> {sub_nodes=.*}',
+                '{node=\\w+} ({val=\\d+})')
+  
+  dat <- unglue::unglue_data(input, patterns = patterns)
+  # individual sub nodes only
+  sub_nodes <- dat$sub_nodes[!is.na(dat$sub_nodes)] %>% 
+    str_split(', ') %>% 
+    unlist
+  # desired value
+  dat$node[!dat$node %in% sub_nodes]
+}
+
+answer7_1(input)
+```
+
+    ## [1] "hlqnsbe"
+
+#### Part-2
+
+### Day-8
+
+### [— Day 8: I Heard You Like Registers —](https://adventofcode.com/2017/day/8)
+
+#### Part-1
+
+``` r
+input <- read_lines('input8.txt')
+
+answer8_1 <- function(input){
+  # pattern to unglue
+  patterns <- '{var=\\w+} {iter=\\w+} {val=[-]?[0-9]+} if {cond=.*}'
+  dat <- unglue::unglue_data(input, patterns = patterns)
+  vars <- unique(dat$var)
+  my_vec <- rep(0, length(vars))
+  names(my_vec) <- vars
+  
+  # modify data
+  dat <- dat %>% 
+    mutate(cond = gsub('^(\\w+)', 'my_vec[["\\1"]]', cond),
+           val = as.numeric(val))
+  # for loop to modify my_vec
+  for(i in seq_along(dat$cond)){
+    if(eval(parse(text = dat$cond[i]))){
+      if (dat$iter[i] == 'inc'){
+        my_vec[dat$var[i]] <- my_vec[dat$var[i]] + dat$val[i]
+      } else {
+        my_vec[dat$var[i]] <- my_vec[dat$var[i]] - dat$val[i]
+      }
+    }
+  }
+  # answer
+  max(my_vec)
+}
+
+answer8_1(input)
+```
+
+    ## [1] 2971
+
+#### Part-2
+
+``` r
+answer8_2 <- function(input){
+  # pattern to unglue
+  patterns <- '{var=\\w+} {iter=\\w+} {val=[-]?[0-9]+} if {cond=.*}'
+  dat <- unglue::unglue_data(input, patterns = patterns)
+  vars <- unique(dat$var)
+  my_vec <- rep(0, length(vars))
+  names(my_vec) <- vars
+  my_vec
+  # initiate a new vector
+  max_val <- 0
+  dat <- dat %>% 
+    mutate(cond = gsub('^(\\w+)', 'my_vec[["\\1"]]', cond),
+           val = as.numeric(val))
+  
+  # slight modification in for loop to store max value in each successful iteration
+  for(i in seq_along(dat$cond)){
+    if(eval(parse(text = dat$cond[i]))){
+      if (dat$iter[i] == 'inc'){
+        my_vec[dat$var[i]] <- my_vec[dat$var[i]] + dat$val[i]
+      } else {
+        my_vec[dat$var[i]] <- my_vec[dat$var[i]] - dat$val[i]
+      }
+      max_val <- append(max_val, max(my_vec))
+    }
+  }
+  # answer
+  max(max_val)
+}
+
+answer8_2(input)
+```
+
+    ## [1] 4254
+
+### Day-9
+
+### [— Day 9: Stream Processing —](https://adventofcode.com/2017/day/9)
+
+#### Part-1
+
+#### Part-2
