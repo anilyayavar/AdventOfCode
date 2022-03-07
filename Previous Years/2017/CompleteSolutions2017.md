@@ -265,3 +265,65 @@ answer5_2(input)
 ### [— Day 6: Memory Reallocation —](https://adventofcode.com/2017/day/6)
 
 #### Part-1
+
+``` r
+input <- read_lines('input6.txt') 
+
+answer6_1 <- function(input){
+  # parse input in a better format
+  input <- input %>% 
+    str_split('\\t') %>% 
+    unlist %>% 
+    as.integer()
+  # initiate while loop
+  memory_banks <- list(input)
+  while(!any(duplicated(memory_banks))){
+    cur_state <- memory_banks[[length(memory_banks)]]
+    m <- which.max(cur_state)
+    l <- cur_state[m]
+    s <- ((seq(m+1, by = 1, length.out=l)-1) %% 16)+1
+    cur_state[m] <- 0
+    cur_state[s] <- cur_state[s] +1
+    memory_banks <- append(memory_banks, list(cur_state))
+  }
+  # final answer is 1 less than length of our list (memory_banks)
+  length(memory_banks)-1
+}
+
+answer6_1(input)
+```
+
+    ## [1] 6681
+
+#### Part-2
+
+``` r
+answer6_2 <- function(input){
+  # parse input in a better format
+  input <- input %>% 
+    str_split('\\t') %>% 
+    unlist %>% 
+    as.integer()
+  # initiate while loop
+  memory_banks <- list(input)
+  while(!any(duplicated(memory_banks))){
+    cur_state <- memory_banks[[length(memory_banks)]]
+    m <- which.max(cur_state)
+    l <- cur_state[m]
+    s <- ((seq(m+1, by = 1, length.out=l)-1) %% 16)+1
+    cur_state[m] <- 0
+    cur_state[s] <- cur_state[s] +1
+    memory_banks <- append(memory_banks, list(cur_state))
+  }
+  # final answer 
+  length(memory_banks) - which.max(map_lgl(memory_banks, ~ all(.x == memory_banks[[length(memory_banks)]])))
+}
+
+answer6_2(input)
+```
+
+    ## [1] 2392
+
+### Day-7
+
+### [— Day 7: Recursive Circus —](https://adventofcode.com/2017/day/7)
