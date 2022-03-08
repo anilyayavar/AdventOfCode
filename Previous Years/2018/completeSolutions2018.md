@@ -262,6 +262,34 @@ answer5_1(input)
 
 #### Part-2
 
+``` r
+answer5_2 <- function(input){
+  # get polymer
+  polymer <- input
+  # reactive polymers list
+  reactive_polymers <- c(paste0(letters, LETTERS), paste0(LETTERS, letters))
+  # new reduction list
+  reduction_list <- split(c(LETTERS, letters), rep(1:26, 2))
+  # helper function this time
+  my_fun <- function(polymer, reactive_polymers = reactive_polymers){
+    while(any(map_lgl(reactive_polymers , ~str_detect(polymer, .x)))){
+      polymer <- reduce(reactive_polymers, 
+                        .init = polymer,
+                        ~str_remove_all(.x, .y))
+    }
+    nchar(polymer)
+  }
+  # answer
+  map(reduction_list, function(.a) reduce(.a, .init = polymer, ~str_remove_all(.x, .y))) %>% 
+    map_int(my_fun, reactive_polymers) %>% 
+    min()
+}
+
+answer5_2(input)
+```
+
+    ## [1] 4240
+
 ### Day-6
 
 ### [](https://adventofcode.com/2018/day/6)

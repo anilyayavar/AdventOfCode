@@ -151,3 +151,101 @@ answer2_1(input)
 ```
 
     ## [1] 24862
+
+#### Part-2
+
+### Day-3
+
+### [— Day 3: Squares With Three Sides —](https://adventofcode.com/2016/day/3)
+
+#### Part-1
+
+``` r
+input <- read_lines('input3.txt')
+answer3_1 <- function(input){
+  # parse
+  dat <- map(str_extract_all(input, '\\d+'), ~ as.integer(.x) %>% sort)
+  # answer
+  map_lgl(dat, ~ .x[1] + .x[2] > .x[3]) %>% 
+    sum
+}
+answer3_1(input)
+```
+
+    ## [1] 983
+
+#### Part-2
+
+``` r
+answer3_2 <- function(input){
+  # parse data differently
+  dat <- map_df(str_extract_all(input, '\\d+'), ~set_names(as.integer(.x), c('num1', 'num2', 'num3')))
+  # modify data structure
+  dat2 <- dat %>% 
+    mutate(r_no = 1 + ((row_number() - 1) %/% 3)) %>% 
+    pivot_longer(!r_no) %>% 
+    group_by(tri_n = paste(r_no, name, sep = '_')) %>% 
+    summarise(points = list(value), .groups = 'drop')
+  # answer (valid triangles)
+  map(dat2$points, sort) %>% 
+    map_lgl(~ .x[1] + .x[2] > .x[3]) %>% 
+    sum
+}
+
+answer3_2(input)
+```
+
+    ## [1] 1836
+
+### Day-4
+
+### [— Day 4: Security Through Obscurity —](https://adventofcode.com/2016/day/4)
+
+#### Part-1
+
+``` r
+input <- read_lines('input4.txt')
+
+answer4_1 <- function(input){
+  # pattern for unglue
+  patterns <- c('{sectors=\\D*}-{sec}[{sec_name}]')
+  # data format
+  dat <- unglue::unglue_data(input, patterns = patterns, convert = TRUE)
+  # answer
+  dat$sec[map_lgl(seq_along(input),
+                  ~ str_remove_all(dat$sectors[.x], '-') %>% 
+                    str_split('') %>% 
+                    table() %>% 
+                    sort(decreasing = TRUE) %>% 
+                    head(5) %>% 
+                    names() %>% 
+                    paste0(collapse = '') == dat$sec_name[.x])] %>% 
+    sum()
+}
+answer4_1(input)
+```
+
+    ## [1] 185371
+
+#### Part-2
+
+``` r
+library(caesar)
+
+answer4_2 <- function(input){
+  # patterns
+  patterns <- c('{sectors=\\D*}-{sec}[{sec_name}]')
+  
+  dat <- unglue::unglue_data(input, patterns = patterns, convert = TRUE)
+  # answer
+  dat$sec[map_lgl(seq_along(input),
+                  ~ caesar(dat$sectors[.x], 1 + ((dat$sec[.x] -1) %% 26)) %>% 
+                    str_replace_all('\\W', ' ') %>% 
+                    tolower() %>% 
+                    str_detect('north'))]
+}
+
+answer4_2(input)
+```
+
+    ## [1] 984
