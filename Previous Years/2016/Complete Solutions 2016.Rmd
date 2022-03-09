@@ -10,6 +10,7 @@ output:
 library(tidyverse)
 library(unglue)
 library(caesar)
+library(digest)
 ```
 
 ### Day 1
@@ -214,4 +215,100 @@ answer4_2 <- function(input){
 
 answer4_2(input)
 ```
+
+
+### Day-5
+### [--- Day 5: How About a Nice Game of Chess? ---](https://adventofcode.com/2016/day/5)
+
+#### Part-1
+```{r}
+answer5_1 <- function(input='reyedfim'){
+  res <- ''
+  counter <- 1
+  for(i in 1:8){
+    counter <- counter +1
+    while(!startsWith(digest(paste0(input, as.character(counter)), algo = 'md5', serialize = FALSE), '00000')){
+      counter <- counter +1
+    }
+    res <- append(res, substr(digest(paste0(input, as.character(counter)), algo = 'md5', serialize = FALSE), 6, 6))
+  }
+  paste0(res, collapse = '')
+}
+answer5_1()
+```
+
+### Part-2
+```{r}
+answer5_2 <- function(input='reyedfim'){
+  # some initial helper values 
+  res <- rep('#', 8)
+  names(res) <- as.character(0:7)
+  pos <- vector()
+  res_vec <- vector()
+  counter <- 1
+  # double while loop
+  while('#' %in% res){
+    
+    while(!startsWith(digest(paste0(input, as.character(counter)), algo = 'md5', serialize = FALSE), '00000')){
+      counter <- counter +1
+    }
+    hash <- digest(paste0(input, as.character(counter)), algo = 'md5', serialize = FALSE)
+    if( substr(hash, 6,6) %in% as.character(0:7) ){
+      res[substr(hash, 6, 6)] <- substr(hash, 7, 7)
+      pos <- append(pos, substr(hash, 6, 6))
+      res_vec <- append(res_vec, substr(hash, 7, 7))
+    }
+    counter <- counter +1
+  }
+  # final answer in 3 steps
+  ans <- res_vec[!duplicated(pos)]
+  names(ans) <- pos[!duplicated(pos)]
+  paste0(ans[order(names(ans))], collapse = '')
+  
+}
+answer5_2()
+```
+
+
+### Day-6
+### [](https://adventofcode.com/2016/day/6)
+
+#### Part-1
+```{r}
+input <- read_lines('input6.txt')
+
+answer6_1 <- function(input){
+  # helper function
+  digit_no <- function(pos){
+    map_chr(input, ~ substr(.x, pos, pos)) %>% 
+      table() %>% 
+      sort(decreasing = TRUE) %>% 
+      head(1) %>% 
+      names()
+  }
+  # answer
+  map_chr(1:8, digit_no) %>% paste0(collapse = '')
+}
+
+answer6_1(input)
+```
+
+### Part-2
+```{r}
+answer6_2 <- function(input){
+  # helper function modified slightly
+  digit_no <- function(pos){
+    map_chr(input, ~ substr(.x, pos, pos)) %>% 
+      table() %>% 
+      sort() %>% 
+      head(1) %>% 
+      names()
+  }
+  # answer
+  map_chr(1:8, digit_no) %>% paste0(collapse = '')
+}
+
+answer6_2(input)
+```
+
 
