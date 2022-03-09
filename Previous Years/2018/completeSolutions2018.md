@@ -139,7 +139,71 @@ answer2_2(input)
 
 #### Part-1
 
+``` r
+input <- read_lines('input3.txt')
+
+answer3_1 <- function(input){
+  # patterns for ungluing details
+  patterns <- '#{carpet_id=\\d+} @ {mar_w=\\d+},{mar_h=\\d+}: {carpet_w=\\d+}x{carpet_h=\\d+}'
+  # database
+  dat <- unglue_data(input, patterns = patterns, convert = TRUE)
+  # define helper function
+  carpet <- function(mw, mh, cw, ch){
+    s_p <- complex(real = mw, imaginary = mh)
+    s_ps <- seq(from=s_p, by = 1+0i, length.out=cw)
+    map(s_ps, ~ seq(.x, by = 0+1i, length.out=ch)) %>% 
+      unlist
+  }
+  
+  # all carpets
+  all_carps <- map(seq_len(nrow(dat)), ~carpet(dat$mar_w[.x], dat$mar_h[.x], dat$carpet_w[.x], dat$carpet_h[.x]))
+  # answer
+  all_carps %>% unlist %>% 
+    table %>% 
+    {which(. > 1)} %>% 
+    length
+}
+
+answer3_1(input)
+```
+
+    ## [1] 105047
+
 #### Part-2
+
+``` r
+answer3_2 <- function(input){
+  # patterns for ungluing details
+  patterns <- '#{carpet_id=\\d+} @ {mar_w=\\d+},{mar_h=\\d+}: {carpet_w=\\d+}x{carpet_h=\\d+}'
+  # database
+  dat <- unglue_data(input, patterns = patterns, convert = TRUE)
+  # define helper function
+  carpet <- function(mw, mh, cw, ch){
+    s_p <- complex(real = mw, imaginary = mh)
+    s_ps <- seq(from=s_p, by = 1+0i, length.out=cw)
+    map(s_ps, ~ seq(.x, by = 0+1i, length.out=ch)) %>% 
+      unlist
+  }
+  
+  # all carpets
+  all_carps <- map(seq_len(nrow(dat)), ~carpet(dat$mar_w[.x], dat$mar_h[.x], dat$carpet_w[.x], dat$carpet_h[.x]))
+  # Overlapping area
+  overlap <- all_carps %>% unlist %>% 
+    table %>% 
+    {which(. > 1)} %>% 
+    names() %>% 
+    as.complex()
+  
+  # answer
+  map_lgl(all_carps, ~ !any(.x %in% overlap)) %>% 
+    which.max()
+  
+}
+
+answer3_2(input)
+```
+
+    ## [1] 658
 
 ### Day-4
 
@@ -292,7 +356,15 @@ answer5_2(input)
 
 ### Day-6
 
-### [](https://adventofcode.com/2018/day/6)
+### [— Day 6: Chronal Coordinates —](https://adventofcode.com/2018/day/6)
+
+#### Part-1
+
+#### Part-2
+
+### Day-7
+
+### [](https://adventofcode.com/2018/day/7)
 
 #### Part-1
 
