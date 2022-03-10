@@ -120,12 +120,70 @@ answer2_2(input)
 
 #### Part-1
 ```{r}
+input <- read_lines('input3.txt') %>% 
+  str_split(',')
+answer3_1 <- function(input){
+  # define another helper function
+  wir_dir <- function(x){
+    if(startsWith(x, 'R')){
+      1+0i
+    } else if(startsWith(x, 'L')){
+      -1+0i
+    } else if(startsWith(x, 'U')){
+      0+1i
+    } else {
+      0-1i
+    }
+  }
+  # init value
+  wire_init <- 0+0i
+  # final answer
+  map(input, function(.a) reduce(.a, .init = wire_init,
+                                 ~ append(.x, 
+                                          seq(.x[length(.x)], 
+                                              by = wir_dir(.y), 
+                                              length.out = 1+as.numeric(gsub('^\\w', '', .y)))[-1]))) %>% 
+    reduce(intersect) %>% 
+    map_dbl(~ abs(Re(.x))+abs(Im(.x))) %>% 
+    {.[.>0]} %>% 
+    min()
+}
 
+answer3_1(input)
 ```
 
 #### Part-2
 ```{r}
+answer3_2 <- function(input){
+  # helper function
+  wir_dir <- function(x){
+    if(startsWith(x, 'R')){
+      1+0i
+    } else if(startsWith(x, 'L')){
+      -1+0i
+    } else if(startsWith(x, 'U')){
+      0+1i
+    } else {
+      0-1i
+    }
+  }
+  
+  wire_init <- 0+0i
+  
+  complete_map <- map(input, function(.a) reduce(.a, .init = wire_init,
+                                                 ~ append(.x, 
+                                                          seq(.x[length(.x)], 
+                                                              by = wir_dir(.y), 
+                                                              length.out = 1+as.numeric(gsub('^\\w', '', .y)))[-1])))
+  
+  complete_map <- map(complete_map, ~.x[-(1)])
+  joints <- reduce(complete_map, intersect)
+  
+  map_int(joints, \(.a) sum(map_int(complete_map, ~ which(.a == .x)))) %>% 
+    min()
+}
 
+answer3_2(input)
 ```
 
 

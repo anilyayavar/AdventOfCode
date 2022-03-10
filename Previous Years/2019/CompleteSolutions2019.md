@@ -45,6 +45,21 @@ library(data.table)
     ## 
     ##     transpose
 
+``` r
+library(reshape2)
+```
+
+    ## 
+    ## Attaching package: 'reshape2'
+
+    ## The following objects are masked from 'package:data.table':
+    ## 
+    ##     dcast, melt
+
+    ## The following object is masked from 'package:tidyr':
+    ## 
+    ##     smiths
+
 ### Day 1
 
 ### [— Day 1: The Tyranny of the Rocket Equation —](https://adventofcode.com/2019/day/1)
@@ -83,7 +98,7 @@ answer1_2(input)
 
 ### Day 2
 
-### [](https://adventofcode.com/2019/day/2)
+### [— Day 2: 1202 Program Alarm —](https://adventofcode.com/2019/day/2)
 
 #### Part-1
 
@@ -165,11 +180,81 @@ answer2_2(input)
 
 #### Part-1
 
+``` r
+input <- read_lines('input3.txt') %>% 
+  str_split(',')
+answer3_1 <- function(input){
+  # define another helper function
+  wir_dir <- function(x){
+    if(startsWith(x, 'R')){
+      1+0i
+    } else if(startsWith(x, 'L')){
+      -1+0i
+    } else if(startsWith(x, 'U')){
+      0+1i
+    } else {
+      0-1i
+    }
+  }
+  # init value
+  wire_init <- 0+0i
+  # final answer
+  map(input, function(.a) reduce(.a, .init = wire_init,
+                                 ~ append(.x, 
+                                          seq(.x[length(.x)], 
+                                              by = wir_dir(.y), 
+                                              length.out = 1+as.numeric(gsub('^\\w', '', .y)))[-1]))) %>% 
+    reduce(intersect) %>% 
+    map_dbl(~ abs(Re(.x))+abs(Im(.x))) %>% 
+    {.[.>0]} %>% 
+    min()
+}
+
+answer3_1(input)
+```
+
+    ## [1] 5319
+
 #### Part-2
+
+``` r
+answer3_2 <- function(input){
+  # helper function
+  wir_dir <- function(x){
+    if(startsWith(x, 'R')){
+      1+0i
+    } else if(startsWith(x, 'L')){
+      -1+0i
+    } else if(startsWith(x, 'U')){
+      0+1i
+    } else {
+      0-1i
+    }
+  }
+  
+  wire_init <- 0+0i
+  
+  complete_map <- map(input, function(.a) reduce(.a, .init = wire_init,
+                                                 ~ append(.x, 
+                                                          seq(.x[length(.x)], 
+                                                              by = wir_dir(.y), 
+                                                              length.out = 1+as.numeric(gsub('^\\w', '', .y)))[-1])))
+  
+  complete_map <- map(complete_map, ~.x[-(1)])
+  joints <- reduce(complete_map, intersect)
+  
+  map_int(joints, \(.a) sum(map_int(complete_map, ~ which(.a == .x)))) %>% 
+    min()
+}
+
+answer3_2(input)
+```
+
+    ## [1] 122514
 
 ### Day 4
 
-### [](https://adventofcode.com/2019/day/4)
+### [— Day 4: Secure Container —](https://adventofcode.com/2019/day/4)
 
 #### Part-1
 
@@ -232,7 +317,7 @@ answer4_2()
 
 ### Day 8
 
-### [](https://adventofcode.com/2019/day/8)
+### [— Day 8: Space Image Format —](https://adventofcode.com/2019/day/8)
 
 #### Part-1
 
@@ -252,28 +337,7 @@ answer8_1(input8)
 
     ## [1] 2460
 
-``` r
-answer8_1('0222112222120000', pixels = 4)
-```
-
-    ## [1] 4
-
 #### Part-2
-
-``` r
-library(reshape2)
-```
-
-    ## 
-    ## Attaching package: 'reshape2'
-
-    ## The following objects are masked from 'package:data.table':
-    ## 
-    ##     dcast, melt
-
-    ## The following object is masked from 'package:tidyr':
-    ## 
-    ##     smiths
 
 ``` r
 answer8_2 <- function(input8, width = 25, length = 6){
