@@ -197,11 +197,38 @@ answer8_1(input)
 
 
 ### Day 9
-### [](https://adventofcode.com/2020/day/9)
+### [--- Day 9: Encoding Error ---](https://adventofcode.com/2020/day/9)
 
 #### Part-1
 ```{r}
+input <- read_lines('input9.txt') %>% as.numeric()
 
+answer9_1 <- function(input, preamble=25){
+  # my preamble
+  n <- preamble
+  # seq
+  ss <- seq(n+1,length(input), by = 1)
+  # helper function
+  my_fun <- function(.x){
+    prev <- seq(.x-n, .x-1, by=1)
+    
+    min_r <- input[prev] %>% 
+      sort() %>% 
+      head(2) %>% 
+      sum()
+    
+    max_r <- input[prev] %>% 
+      sort() %>% 
+      tail(2) %>% 
+      sum()
+    
+    !between(input[.x], min_r, max_r)
+  }
+  # final answer
+  input[ss[map_lgl(ss, my_fun)]]
+}
+
+answer9_1(input, 25)
 ```
 
 #### Part-2
