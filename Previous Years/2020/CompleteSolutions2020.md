@@ -6,7 +6,7 @@ library(tidyverse)
 
     ## v ggplot2 3.3.5     v purrr   0.3.4
     ## v tibble  3.1.5     v dplyr   1.0.7
-    ## v tidyr   1.2.0     v stringr 1.4.0
+    ## v tidyr   1.1.4     v stringr 1.4.0
     ## v readr   2.0.2     v forcats 0.5.1
 
     ## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
@@ -237,3 +237,105 @@ answer9_1(input, 25)
 #### Part-1
 
 #### Part-2
+
+### Day 12
+
+### [](https://adventofcode.com/2020/day/12)
+
+#### Part-1
+
+#### Part-2
+
+### Day 13
+
+### [](https://adventofcode.com/2020/day/13)
+
+#### Part-1
+
+#### Part-2
+
+### Day 14
+
+### [](https://adventofcode.com/2020/day/14)
+
+#### Part-1
+
+#### Part-2
+
+### Day 15
+
+### [](https://adventofcode.com/2020/day/15)
+
+#### Part-1
+
+#### Part-2
+
+### Day 16
+
+### [](https://adventofcode.com/2020/day/16)
+
+#### Part-1
+
+#### Part-2
+
+### Day 17
+
+### [](https://adventofcode.com/2020/day/17)
+
+#### Part-1
+
+#### Part-2
+
+### Day 18
+
+### [— Day 18: Operation Order —](https://adventofcode.com/2020/day/18)
+
+#### Part-1
+
+``` r
+input <- read_lines('input18.txt')
+
+answer18_1 <- function(input){
+  # define helper functions
+  `%a%` <- function(x,y) x+y
+  `%s%` <- function(x,y) x-y
+  `%m%` <- function(x,y) x*y
+  `%d%` <- function(x,y) x/y
+  
+  # modify input
+  input <- reduce2(list('\\+', '\\-', '\\*', '\\/'), list('%a%', '%s%', '%m%', '%d%'),
+                   .init = input,
+                   function(.x, .y, .z) map(.x, function(.a) str_replace_all(.a, .y, .z )))
+  
+  # final answer
+  map_dbl(input, ~ eval(parse(text = .x))) %>% 
+    sum()
+  
+}
+
+answer18_1(input)
+```
+
+    ## [1] 131076645626
+
+#### Part-2
+
+``` r
+answer18_2 <- function(input){
+  # helper function
+  `/` <- function(x,y) x+y    
+  `-` <- function(x,y) x*y
+  # modify input
+  input <- reduce2(list('\\+', '\\*'), list('/', '-'),
+                   .init = input,
+                   function(.x, .y, .z) map(.x, function(.a) str_replace_all(.a, .y, .z )))
+  
+  # final answer
+  map_dbl(input, ~ eval(parse(text = .x))) %>% 
+    sum()
+}
+
+print(answer18_2(input), digits = 14)
+```
+
+    ## [1] 109418509151782
