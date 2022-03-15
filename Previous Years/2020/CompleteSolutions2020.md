@@ -23,6 +23,14 @@ library(unglue)
 
 #### Part-1
 
+``` r
+input <- read_lines('input1.txt') %>% as.integer()
+
+answer1_1 <- function(input){
+  
+}
+```
+
 #### Part-2
 
 ### Day 2
@@ -287,6 +295,12 @@ answer15_1(c(15L, 5L, 1L, 4L, 7L, 0L), number = 2020L)
 ```
 
     ## [1] 1259
+
+**Note:** Though part-1 of the answer/code above may also work but it
+will be optimised to have only last indices of unique number in each
+iteration. So, a different function has been used, which aid to generate
+only the current/last number or alternatively the last index of any
+unique number in the sequence.
 
 #### Part-2
 
