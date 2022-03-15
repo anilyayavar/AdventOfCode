@@ -19,7 +19,7 @@ library(unglue)
 
 ### Day 1
 
-### [](https://adventofcode.com/2020/day/1)
+### [— Day 1: Report Repair —](https://adventofcode.com/2020/day/1)
 
 #### Part-1
 
@@ -264,9 +264,29 @@ answer9_1(input, 25)
 
 ### Day 15
 
-### [](https://adventofcode.com/2020/day/15)
+### [— Day 15: Rambunctious Recitation —](https://adventofcode.com/2020/day/15)
+
+**Explanation** This is [Van Eck sequence](https://oeis.org/A181391).
 
 #### Part-1
+
+``` r
+answer15_1 <- function(my_seq, number){
+  while(length(my_seq)<number){
+    if(!my_seq[length(my_seq)] %in% my_seq[-length(my_seq)]){
+      my_seq <- append(my_seq, 0L)
+    } else {
+      my_seq <- append(my_seq, length(my_seq) - max(which(my_seq[-length(my_seq)] == my_seq[length(my_seq)])))
+    }
+  }
+  
+  my_seq[length(my_seq)]
+}
+
+answer15_1(c(15L, 5L, 1L, 4L, 7L, 0L), number = 2020L)
+```
+
+    ## [1] 1259
 
 #### Part-2
 
