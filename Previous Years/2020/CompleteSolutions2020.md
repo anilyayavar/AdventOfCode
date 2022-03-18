@@ -19,19 +19,79 @@ library(unglue)
 
 ### Day 1
 
-### [](https://adventofcode.com/2020/day/1)
+### [— Day 1: Report Repair —](https://adventofcode.com/2020/day/1)
 
 #### Part-1
 
+``` r
+input <- read_lines('input1.txt') %>% as.integer()
+
+answer1_1 <- function(input){
+  
+  combn(input, 2) %>% 
+    {.[,which(colSums(.) == 2020)]} %>% 
+    prod()
+}
+answer1_1(input)
+```
+
+    ## [1] 744475
+
 #### Part-2
+
+``` r
+answer1_2 <- function(input){
+  
+  combn(input, 3) %>% 
+    {.[,which(colSums(.) == 2020)]} %>% 
+    prod()
+}
+answer1_2(input)
+```
+
+    ## [1] 70276940
 
 ### Day 2
 
-### [](https://adventofcode.com/2020/day/2)
+### [— Day 2: Password Philosophy —](https://adventofcode.com/2020/day/2)
 
 #### Part-1
 
+``` r
+input <- read_lines('input2.txt')
+
+answer2_1 <- function(input){
+  patterns <- '{min=\\d+}-{max=\\d+} {char=\\w}: {word}'
+  
+  dat <- unglue::unglue_data(input, patterns, convert = T)
+  
+  dat %>% 
+    summarise(valid_pw = sum(str_count(word, char) >= min & str_count(word, char) <= max)) %>% 
+    pull(valid_pw)
+}
+answer2_1(input)
+```
+
+    ## [1] 607
+
 #### Part-2
+
+``` r
+answer2_2 <- function(input){
+  patterns <- '{min=\\d+}-{max=\\d+} {char=\\w}: {word}'
+  
+  dat <- unglue::unglue_data(input, patterns, convert = T)
+  
+  dat %>% 
+    summarise(valid_pw = sum(xor(substr(word, min, min)==char, 
+                                 substr(word, max, max) == char))) %>% 
+    pull(valid_pw)
+  
+}
+answer2_2(input)
+```
+
+    ## [1] 321
 
 ### Day 3
 
@@ -264,11 +324,74 @@ answer9_1(input, 25)
 
 ### Day 15
 
-### [](https://adventofcode.com/2020/day/15)
+### [— Day 15: Rambunctious Recitation —](https://adventofcode.com/2020/day/15)
+
+**Explanation** This is [Van Eck sequence](https://oeis.org/A181391).
 
 #### Part-1
 
+``` r
+answer15_1 <- function(my_seq, number){
+  while(length(my_seq)<number){
+    if(!my_seq[length(my_seq)] %in% my_seq[-length(my_seq)]){
+      my_seq <- append(my_seq, 0L)
+    } else {
+      my_seq <- append(my_seq, length(my_seq) - max(which(my_seq[-length(my_seq)] == my_seq[length(my_seq)])))
+    }
+  }
+  
+  my_seq[length(my_seq)]
+}
+
+answer15_1(c(15L, 5L, 1L, 4L, 7L, 0L), number = 2020L)
+```
+
+    ## [1] 1259
+
+**Note:** Though part-1 of the answer/code above may also work but it
+will be optimised to have only last indices of unique number in each
+iteration. So, a different function has been used, which aid to generate
+only the current/last number or alternatively the last index of any
+unique number in the sequence.
+
+Hints have been taken from
+<https://github.com/fdlk/advent-2020/blob/master/day15.md>
+
 #### Part-2
+
+``` r
+input <- c(15L, 5L, 1L, 4L, 7L, 0L)
+
+answer15_2 <- function(input){
+  game <- rep(0, 30000000)
+  for (i in 1:(length(input) - 1)) {
+    number <- input[[i]]
+    game[number + 1] <- i
+  }
+  
+  
+  last_number <- last(input)
+  
+  
+  for (i in (length(input) + 1):30000000) {
+    occurred_last <- game[[last_number + 1]]
+    game[[last_number + 1]] <- i - 1
+    last_number <- if (occurred_last == 0) {
+      0
+    } else {
+      i - 1 - occurred_last
+    }
+  }
+  
+  
+  last_number
+  
+}
+
+answer15_2(input)
+```
+
+    ## [1] 689
 
 ### Day 16
 
@@ -339,3 +462,156 @@ print(answer18_2(input), digits = 14)
 ```
 
     ## [1] 109418509151782
+
+### Day 19
+
+### [](https://adventofcode.com/2020/day/19)
+
+#### Part-1
+
+#### Part-2
+
+### Day 20
+
+### [](https://adventofcode.com/2020/day/20)
+
+#### Part-1
+
+#### Part-2
+
+### Day 21
+
+### [— Day 21: Allergen Assessment —](https://adventofcode.com/2020/day/21)
+
+#### Part-1
+
+``` r
+input <- read_lines('input21.txt')
+
+answer21_1 <- function(input){
+  # patterns
+  patterns <- '{ingr=[^\\(]*} (contains {aller=[^\\)]*})'
+  
+  # read data
+  dat <- unglue_data(input, patterns=patterns)
+  # all allergans
+  all_allregans <- str_split(dat$aller, ', ') %>% unlist %>% unique %>% sort()
+  
+  # modify data
+  dat <- dat %>% 
+    mutate(ingr = str_split(ingr, ' '))
+  
+  # build a list
+  map_list <- map(all_allregans, ~ str_detect(dat$aller, paste0('\\b', .x, '\\b')))
+  
+  
+  alle_code <- map(map_list, ~ reduce(dat$ingr[.x], intersect)) %>% 
+    unlist %>% unique
+  
+  {dat$ingr %>% unlist %>% length()} - {map_int(alle_code, ~ sum(dat$ingr %>% unlist == .x)) %>% sum()}
+}
+
+answer21_1(input)
+```
+
+    ## [1] 2556
+
+#### Part-2
+
+``` r
+answer21_2 <- function(input){
+  # patterns
+  patterns <- '{ingr=[^\\(]*} (contains {aller=[^\\)]*})'
+  # data
+  dat <- unglue_data(input, patterns=patterns)
+  # all allergans
+  all_allregans <- str_split(dat$aller, ', ') %>% unlist %>% unique %>% sort()
+  # modify data
+  dat <- dat %>% 
+    mutate(ingr = str_split(ingr, ' '))
+  # intermediate list-1
+  map_list <- map(all_allregans, ~ str_detect(dat$aller, paste0('\\b', .x, '\\b')))
+  # intermediate list2
+  list2 <- map(map_list, ~ reduce(dat$ingr[.x], intersect))
+  names(list2) <- all_allregans
+  list2 <- list2[order(map_int(list2, length))]
+  
+  # final list for answer
+  my_list <- c()
+  
+  # while loop
+  while(1 %in% map_int(list2, length)){
+    my_list <- append(my_list, unlist(list2[map_int(list2, length) ==1]))
+    list2 <- map(list2, ~ .x[!.x %in% my_list])
+  }
+  # answer
+  paste0(my_list[order(names(my_list))], collapse = ',')
+}
+
+answer21_2(input)
+```
+
+    ## [1] "vcckp,hjz,nhvprqb,jhtfzk,mgkhhc,qbgbmc,bzcrknb,zmh"
+
+### Day 22
+
+### [— Day 22: Crab Combat —](https://adventofcode.com/2020/day/22)
+
+#### Part-1
+
+``` r
+input <- scan("input22.txt", "character", sep = "\n")
+
+answer22_1 <- function(input){
+  # read file correctly
+  players <- grep("^Player", input)
+  
+  player1 <- input[(players[1]+1):(players[2]-1)] %>% as.integer()
+  player2 <- input[(players[2]+1):(length(input))] %>%  as.integer()
+  
+  # while loop
+  while(all(map_int(list(player1, player2), length) > 0)){
+    x <- player1[1]
+    player1 <- player1[-1]
+    y <- player2[1]
+    player2 <- player2[-1]
+    if(x > y){
+      player1 <- append(player1, c(x, y))
+    } else {
+      player2 <- append(player2, c(y, x))
+    }
+  }
+  # answer
+  sum(c(player1, player2) * 50:1)
+}
+
+answer22_1(input)
+```
+
+    ## [1] 32815
+
+#### Part-2
+
+### Day 23
+
+### [](https://adventofcode.com/2020/day/23)
+
+#### Part-1
+
+#### Part-2
+
+### Day 24
+
+### [](https://adventofcode.com/2020/day/24)
+
+#### Part-1
+
+#### Part-2
+
+### Day 25
+
+### [](https://adventofcode.com/2020/day/25)
+
+#### Part-1
+
+#### Part-2
