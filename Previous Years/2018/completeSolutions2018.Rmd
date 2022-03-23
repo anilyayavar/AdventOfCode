@@ -397,7 +397,24 @@ answer6_2(input)
 
 #### Part-1
 ```{r}
+input <- read_lines('input7.txt')
 
+answer7_1 <- function(input){
+  patterns <- 'Step {preq} must be finished before step {post} can begin.'
+  
+  dat <- unglue_data(input, patterns)
+  
+  all_tasks <- union(dat$preq, dat$post)
+  finished <- c()
+  for(i in seq_along(all_tasks)){
+    available <- setdiff(all_tasks, unique(dat$post[!dat$preq %in% finished]))
+    finished <- append(finished, sort(setdiff(available, finished))[1])
+  }
+  #answer
+  paste0(finished, collapse = '')
+}
+
+answer7_1(input)
 ```
 
 #### Part-2
