@@ -360,7 +360,119 @@ answer5_2(input)
 
 #### Part-1
 
+``` r
+input <- read_lines('input6.txt')
+
+answer6_1 <- function(input){
+  
+  patterns <- '{x}, {y}'
+  
+  dat <- unglue_data(input, patterns, convert = TRUE)
+  
+  dat <- dat %>% 
+    mutate(z= complex(real = x, imaginary = y))
+  
+  man_dist <- function(x, y){
+    diff(sort(c(Re(x), Re(y)))) + 
+      diff(sort(c(Im(x), Im(y))))
+  }
+  
+  borders <- function(z){
+    min_x <- min(Re(z))
+    max_x <- max(Re(z))
+    min_y <- min(Im(z))
+    max_y <- max(Im(z))
+    f <- seq(complex(real = min_x, imaginary = min_y), by = 1, length.out = max_x - min_x + 1)
+    s <- seq(complex(real = min_x, imaginary = min_y), by = 0+1i, length.out = max_y - min_y + 1)
+    t <- seq(tail(f, 1), by = 0+1i, length.out = max_y - min_y + 1)
+    l <- seq(tail(s,1), by = 1, length.out = max_x - min_x + 1)
+    unique(c(f, s, t, l))
+  }
+  
+  finite_points <- function(z){
+    min_x <- min(Re(z))
+    max_x <- max(Re(z))
+    min_y <- min(Im(z))
+    max_y <- max(Im(z))
+    
+    expand_grid(x=seq(min_x+1, max_x-1, by=1), 
+                y=seq(min_y+1, max_y-1, by=1)) %>% 
+      transmute(z = complex(real = x, imaginary = y)) %>% 
+      {.$z}
+  }
+  
+  my_fun <- function(z){
+    dist_vec <- map_dbl(dat$z, ~man_dist(.x, z))
+    if(length(which(dist_vec == min(dist_vec))) == 1){
+      dat$z[which(dist_vec == min(dist_vec))]
+    } else {
+      NA
+    }
+  }
+  res <- map(finite_points(dat$z), 
+             my_fun ) %>% unlist
+  bor <- map(borders(dat$z), my_fun) %>% unlist
+  # answer
+  table(res)[!names(table(res)) %in% names(table(bor))] %>% max
+}
+
+answer6_1(input)
+```
+
+    ## [1] 3251
+
 #### Part-2
+
+``` r
+answer6_2 <- function(input){
+  patterns <- '{x}, {y}'
+  
+  dat <- unglue_data(input, patterns, convert = TRUE)
+  
+  dat <- dat %>% 
+    mutate(z= complex(real = x, imaginary = y))
+  
+  man_dist <- function(x, y){
+    diff(sort(c(Re(x), Re(y)))) + 
+      diff(sort(c(Im(x), Im(y))))
+  }
+  
+  borders <- function(z){
+    min_x <- min(Re(z))
+    max_x <- max(Re(z))
+    min_y <- min(Im(z))
+    max_y <- max(Im(z))
+    f <- seq(complex(real = min_x, imaginary = min_y), by = 1, length.out = max_x - min_x + 1)
+    s <- seq(complex(real = min_x, imaginary = min_y), by = 0+1i, length.out = max_y - min_y + 1)
+    t <- seq(tail(f, 1), by = 0+1i, length.out = max_y - min_y + 1)
+    l <- seq(tail(s,1), by = 1, length.out = max_x - min_x + 1)
+    unique(c(f, s, t, l))
+  }
+  
+  finite_points <- function(z){
+    min_x <- min(Re(z))
+    max_x <- max(Re(z))
+    min_y <- min(Im(z))
+    max_y <- max(Im(z))
+    
+    expand_grid(x=seq(min_x+1, max_x-1, by=1), 
+                y=seq(min_y+1, max_y-1, by=1)) %>% 
+      transmute(z = complex(real = x, imaginary = y)) %>% 
+      {.$z}
+  }
+  
+  my_fun <- function(z){
+    sum(map_dbl(dat$z, ~man_dist(.x, z))) < 10000
+  }
+  map_lgl(finite_points(dat$z), 
+          my_fun ) %>% sum
+  
+}
+
+answer6_2(input)
+```
+
+    ## [1] 47841
 
 ### Day-7
 
