@@ -271,7 +271,7 @@ answer5_2()
 
 
 ### Day-6
-### [](https://adventofcode.com/2016/day/6)
+### [--- Day 6: Signals and Noise ---](https://adventofcode.com/2016/day/6)
 
 #### Part-1
 ```{r}
@@ -309,6 +309,35 @@ answer6_2 <- function(input){
 }
 
 answer6_2(input)
+```
+
+
+### Day-7
+### [--- Day 7: Internet Protocol Version 7 ---](https://adventofcode.com/2016/day/7)
+
+#### Part-1
+```{r}
+input <- read_lines('input7.txt')
+answer7_1 <- function(input){
+  ABBA <- union(apply(combn(letters, 2), 2, FUN = function(x) paste0(x, rev(x), collapse = '')),
+                apply(combn(letters, 2), 2, FUN = function(x) paste0(rev(x), x, collapse = '')))
+  
+  cond1 <- map_lgl(str_replace_all(input, '\\[[^\\]]*\\]', ' '),
+                   \(.a) any(map_lgl(ABBA, 
+                                     ~str_detect(.a, .x))))
+  #answer
+  map_chr(str_extract_all(input, '\\[[^\\]]*\\]')[cond1], ~paste0(.x, collapse = '')) %>% 
+    map_lgl(\(.a) !any(map_lgl(ABBA,
+                               ~str_detect(.a, .x)))) %>% 
+    sum()
+  
+}
+answer7_1(input)
+```
+
+#### Part-2
+```{r}
+
 ```
 
 

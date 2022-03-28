@@ -5,9 +5,9 @@ library(tidyverse)
     ## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
 
     ## v ggplot2 3.3.5     v purrr   0.3.4
-    ## v tibble  3.1.5     v dplyr   1.0.7
+    ## v tibble  3.1.6     v dplyr   1.0.8
     ## v tidyr   1.2.0     v stringr 1.4.0
-    ## v readr   2.0.2     v forcats 0.5.1
+    ## v readr   2.1.2     v forcats 0.5.1
 
     ## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
     ## x dplyr::filter() masks stats::filter()
@@ -313,7 +313,7 @@ answer5_2()
 
 ### Day-6
 
-### [](https://adventofcode.com/2016/day/6)
+### [— Day 6: Signals and Noise —](https://adventofcode.com/2016/day/6)
 
 #### Part-1
 
@@ -358,3 +358,32 @@ answer6_2(input)
 ```
 
     ## [1] "uwpfaqrq"
+
+### Day-7
+
+### [— Day 7: Internet Protocol Version 7 —](https://adventofcode.com/2016/day/7)
+
+#### Part-1
+
+``` r
+input <- read_lines('input7.txt')
+answer7_1 <- function(input){
+  ABBA <- union(apply(combn(letters, 2), 2, FUN = function(x) paste0(x, rev(x), collapse = '')),
+                apply(combn(letters, 2), 2, FUN = function(x) paste0(rev(x), x, collapse = '')))
+  
+  cond1 <- map_lgl(str_replace_all(input, '\\[[^\\]]*\\]', ' '),
+                   \(.a) any(map_lgl(ABBA, 
+                                     ~str_detect(.a, .x))))
+  #answer
+  map_chr(str_extract_all(input, '\\[[^\\]]*\\]')[cond1], ~paste0(.x, collapse = '')) %>% 
+    map_lgl(\(.a) !any(map_lgl(ABBA,
+                               ~str_detect(.a, .x)))) %>% 
+    sum()
+  
+}
+answer7_1(input)
+```
+
+    ## [1] 118
+
+#### Part-2
