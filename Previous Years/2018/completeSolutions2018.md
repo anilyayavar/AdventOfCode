@@ -437,18 +437,6 @@ answer6_2 <- function(input){
       diff(sort(c(Im(x), Im(y))))
   }
   
-  borders <- function(z){
-    min_x <- min(Re(z))
-    max_x <- max(Re(z))
-    min_y <- min(Im(z))
-    max_y <- max(Im(z))
-    f <- seq(complex(real = min_x, imaginary = min_y), by = 1, length.out = max_x - min_x + 1)
-    s <- seq(complex(real = min_x, imaginary = min_y), by = 0+1i, length.out = max_y - min_y + 1)
-    t <- seq(tail(f, 1), by = 0+1i, length.out = max_y - min_y + 1)
-    l <- seq(tail(s,1), by = 1, length.out = max_x - min_x + 1)
-    unique(c(f, s, t, l))
-  }
-  
   finite_points <- function(z){
     min_x <- min(Re(z))
     max_x <- max(Re(z))
@@ -476,7 +464,108 @@ answer6_2(input)
 
 ### Day-7
 
-### [](https://adventofcode.com/2018/day/7)
+### [— Day 7: The Sum of Its Parts —](https://adventofcode.com/2018/day/7)
+
+#### Part-1
+
+``` r
+input <- read_lines('input7.txt')
+
+answer7_1 <- function(input){
+  patterns <- 'Step {preq} must be finished before step {post} can begin.'
+  
+  dat <- unglue_data(input, patterns)
+  
+  all_tasks <- union(dat$preq, dat$post)
+  finished <- c()
+  for(i in seq_along(all_tasks)){
+    available <- setdiff(all_tasks, unique(dat$post[!dat$preq %in% finished]))
+    finished <- append(finished, sort(setdiff(available, finished))[1])
+  }
+  #answer
+  paste0(finished, collapse = '')
+}
+
+answer7_1(input)
+```
+
+    ## [1] "BFKEGNOVATIHXYZRMCJDLSUPWQ"
+
+#### Part-2
+
+### Day-8
+
+### [](https://adventofcode.com/2018/day/8)
+
+#### Part-1
+
+#### Part-2
+
+### Day-9
+
+### [](https://adventofcode.com/2018/day/9)
+
+#### Part-1
+
+#### Part-2
+
+### Day-10
+
+### [](https://adventofcode.com/2018/day/10)
+
+#### Part-1
+
+#### Part-2
+
+### Day-11
+
+### [— Day 11: Chronal Charge —](https://adventofcode.com/2018/day/11)
+
+#### Part-1
+
+**Explanation:** Solved this with use of complex numbers which can be
+thought of two dimensional numbers every time.
+
+``` r
+input <- 9445
+answer11_1 <- function(input=9445){
+  # helper function
+  grid33 <- function(x){
+    e <- expand.grid(0:2,0:2)
+    x + complex(real=e$Var1, imaginary = e$Var2)
+  }
+  # Complete input grid (Leave last two)
+  input_grid <- expand.grid(1L:298L, 1L:298L) %>% 
+    transmute(x = complex(real=Var1, imaginary = Var2)) %>% 
+    pull(x)
+  # power of one cell
+  power_1 <- function(x){
+    rack <- Re(x) + 10
+    (((rack * Im(x) +input)*rack) %/% 100) %% 10
+  }
+  #Vectorise above helper function
+  power_g <- Vectorize(power_1, vectorize.args = 'x')
+  
+  map_int(input_grid, ~ grid33(.x) %>% 
+            power_g() %>% 
+            sum() %>% 
+            as.integer) %>% 
+    which.max() %>% 
+    {input_grid[.]} %>% 
+    {paste(Re(.), Im(.), sep = ',')}
+  
+}
+
+answer11_1()
+```
+
+    ## [1] "233,36"
+
+#### Part-2
+
+### Day-12
+
+### [](https://adventofcode.com/2018/day/12)
 
 #### Part-1
 

@@ -393,7 +393,7 @@ answer6_2(input)
 
 
 ### Day-7
-### [](https://adventofcode.com/2018/day/7)
+### [--- Day 7: The Sum of Its Parts ---](https://adventofcode.com/2018/day/7)
 
 #### Part-1
 ```{r}
@@ -421,3 +421,100 @@ answer7_1(input)
 ```{r}
 
 ```
+
+### Day-8
+### [](https://adventofcode.com/2018/day/8)
+
+#### Part-1
+```{r}
+
+```
+
+#### Part-2
+```{r}
+
+```
+
+### Day-9
+### [](https://adventofcode.com/2018/day/9)
+
+#### Part-1
+```{r}
+
+```
+
+#### Part-2
+```{r}
+
+```
+
+### Day-10
+### [](https://adventofcode.com/2018/day/10)
+
+#### Part-1
+```{r}
+
+```
+
+#### Part-2
+```{r}
+
+```
+
+### Day-11
+### [--- Day 11: Chronal Charge ---](https://adventofcode.com/2018/day/11)
+
+#### Part-1
+**Explanation:**  Solved this with use of complex numbers which can be thought of two dimensional numbers every time.
+```{r}
+input <- 9445
+answer11_1 <- function(input=9445){
+  # helper function
+  grid33 <- function(x){
+    e <- expand.grid(0:2,0:2)
+    x + complex(real=e$Var1, imaginary = e$Var2)
+  }
+  # Complete input grid (Leave last two)
+  input_grid <- expand.grid(1L:298L, 1L:298L) %>% 
+    transmute(x = complex(real=Var1, imaginary = Var2)) %>% 
+    pull(x)
+  # power of one cell
+  power_1 <- function(x){
+    rack <- Re(x) + 10
+    (((rack * Im(x) +input)*rack) %/% 100) %% 10
+  }
+  #Vectorise above helper function
+  power_g <- Vectorize(power_1, vectorize.args = 'x')
+  
+  map_int(input_grid, ~ grid33(.x) %>% 
+            power_g() %>% 
+            sum() %>% 
+            as.integer) %>% 
+    which.max() %>% 
+    {input_grid[.]} %>% 
+    {paste(Re(.), Im(.), sep = ',')}
+  
+}
+
+answer11_1()
+```
+
+#### Part-2
+```{r}
+
+```
+
+### Day-12
+### [](https://adventofcode.com/2018/day/12)
+
+#### Part-1
+```{r}
+
+```
+
+#### Part-2
+```{r}
+
+```
+
+
