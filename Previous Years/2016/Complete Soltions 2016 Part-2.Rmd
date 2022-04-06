@@ -44,3 +44,31 @@ answer9_1 <- function(input){
 answer9_1(input)
 ```
 
+#### Part-2
+```{r}
+answer9_2 <- function(input){
+  x <- input
+  res <- rep(1, nchar(x))
+  counter <- 1
+  # while loop
+  while(str_detect(x, '\\(')){
+    
+    counter <- regexpr('\\(', x, perl = TRUE)[[1]] -1 + counter
+    x <- substr(x, regexpr('\\(', x, perl = TRUE), nchar(x))
+    marker <- substr(x, regexpr('\\(', x, perl = TRUE), regexpr('\\)', x, perl = TRUE))
+    marker_vals <- as.integer(str_extract_all(marker, '\\d+')[[1]])
+    x <- str_remove(x, '\\(\\d+x\\d+\\)')
+    res[seq(counter, by =1, length.out=nchar(marker))] <- 0
+    res[seq(counter+nchar(marker), 
+            by = 1, 
+            length.out = marker_vals[1])] <- res[seq(counter+nchar(marker), 
+                                                     by = 1, 
+                                                     length.out = marker_vals[1])] * marker_vals[2]
+    counter <- counter + nchar(marker)
+  }
+  # answer
+  sum(res)
+}
+answer9_2(input)
+```
+
