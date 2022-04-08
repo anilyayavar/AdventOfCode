@@ -65,3 +65,10 @@ my_fun2 <- function(.x, .y){
     }
   }
 }
+
+
+
+library(tidyverse)
+input <- read_lines('Previous Years/2020/input10.txt')
+input %>% 
+  as.integer()

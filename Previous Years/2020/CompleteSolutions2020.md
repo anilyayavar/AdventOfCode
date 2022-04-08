@@ -2,11 +2,13 @@
 library(tidyverse)
 ```
 
+    ## Warning: package 'tidyverse' was built under R version 4.1.3
+
     ## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
 
     ## v ggplot2 3.3.5     v purrr   0.3.4
     ## v tibble  3.1.5     v dplyr   1.0.7
-    ## v tidyr   1.1.4     v stringr 1.4.0
+    ## v tidyr   1.2.0     v stringr 1.4.0
     ## v readr   2.0.2     v forcats 0.5.1
 
     ## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
@@ -284,11 +286,55 @@ answer9_1(input, 25)
 
 ### Day 10
 
-### [](https://adventofcode.com/2020/day/10)
+### [— Day 10: Adapter Array —](https://adventofcode.com/2020/day/10)
 
 #### Part-1
 
+``` r
+input <- read_lines('input10.txt')
+answer10_1 <- function(input){
+  input %>% 
+    as.integer() %>% 
+    {c(0L, . , max(.)+3L)} %>% 
+    sort() %>% 
+    diff %>% 
+    table %>% 
+    {.['1']*.['3']} %>% 
+    unname()
+}
+
+answer10_1(input)
+```
+
+    ## [1] 1885
+
 #### Part-2
+
+Explanation: By a simple hit and trial we may know that there are
+
+-   no choices whenever difference is 3
+-   2 choices when there are 2 consecutive 1s
+-   4 choices when there are 3 consecutive 1s
+-   7 choices when there are 4 consecutive 1s
+
+``` r
+answer10_2 <- function(input){
+  input %>% 
+  as.integer() %>% 
+  {c(0L, . , max(.)+3L)} %>% 
+  sort() %>% 
+  diff %>% 
+  rle() %>% 
+  {.$lengths[.$values == 1]} %>% 
+  {ifelse(.==4, 7, ifelse(. == 3, 4, .))} %>% 
+  prod %>% 
+  {print(., digits = 13)}
+}
+
+answer10_2(input)
+```
+
+    ## [1] 2024782584832
 
 ### Day 11
 

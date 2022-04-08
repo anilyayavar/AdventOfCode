@@ -274,16 +274,47 @@ answer9_1(input, 25)
 
 
 ### Day 10
-### [](https://adventofcode.com/2020/day/10)
+### [--- Day 10: Adapter Array ---](https://adventofcode.com/2020/day/10)
 
 #### Part-1
 ```{r}
+input <- read_lines('input10.txt')
+answer10_1 <- function(input){
+  input %>% 
+    as.integer() %>% 
+    {c(0L, . , max(.)+3L)} %>% 
+    sort() %>% 
+    diff %>% 
+    table %>% 
+    {.['1']*.['3']} %>% 
+    unname()
+}
 
+answer10_1(input)
 ```
 
 #### Part-2
-```{r}
+Explanation:  By a simple hit and trial we may know that there are 
 
+ - no choices whenever difference is 3
+ - 2 choices when there are 2 consecutive 1s
+ - 4 choices when there are 3 consecutive 1s
+ - 7 choices when there are 4 consecutive 1s
+```{r}
+answer10_2 <- function(input){
+  input %>% 
+  as.integer() %>% 
+  {c(0L, . , max(.)+3L)} %>% 
+  sort() %>% 
+  diff %>% 
+  rle() %>% 
+  {.$lengths[.$values == 1]} %>% 
+  {ifelse(.==4, 7, ifelse(. == 3, 4, .))} %>% 
+  prod %>% 
+  {print(., digits = 13)}
+}
+
+answer10_2(input)
 ```
 
 
