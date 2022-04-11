@@ -1,74 +1,87 @@
 library(tidyverse)
 
-install.packages('tictoc')
-library(tictoc)
 
-input <- c(15L, 5L, 1L, 4L, 7L, 0L)
+input <- read_lines('Previous Years/2020/input11.txt')
 
-game <- rep(0, 30000000)
-for (i in 1:(length(input) - 1)) {
-  number <- input[[i]]
-  game[number + 1] <- i
+
+mat <- str_split(input, '') %>% 
+  unlist %>% 
+  matrix(nrow=length(input), byrow = TRUE)
+
+mat
+
+# Define neighborhood function
+neighbors <- function(i, j, input_mat){
+  # prepare a grid of neigborhood indices
+  g <- setdiff(expand.grid((i-1):(i+1), (j-1):(j+1)), expand.grid(i, j))
+  # neighbourhood values
+  unlist(pmap(g, ~ tryCatch(input_mat[c(...)[1], c(...)[2]], error = function(e) NULL)))
 }
 
+#initial Matrix
+mat_1 <- ifelse(mat=='L', '#', mat)
 
-last_number <- last(input)
-
-
-for (i in (length(input) + 1):30000000) {
-  occurred_last <- game[[last_number + 1]]
-  game[[last_number + 1]] <- i - 1
-  last_number <- if (occurred_last == 0) {
-    0
-  } else {
-    i - 1 - occurred_last
-  }
-}
-
-
-last_number
-
-input <- read_lines('Previous Years/2020/input12.txt')
-
-unique(substr(input, 1, 1))
-
-as.integer(gsub('^\\w', '', input))
-complex(real = 1, imaginary = 0)
-
-init <- list(coor = 0+0i, dir = 0+1i)
-
-Conj(-1+0i)
-
-my_fun <- function(coor, dir, deg){
-  
-}
-
-
-my_fun2 <- function(.x, .y){
-  if(!substr(.y, 1, 1) %in% c('R', 'L')){
-    dir <- .x$dir
-    if(substr(.y, 1, 1) == 'N'){
-      coor <- .x$coor + complex(real = 0, imaginary = as.integer(gsub('^\\w', '', .y)))
-    } else if (substr(.y, 1, 1) == 'S'){
-      coor <- .x$coor - complex(real = 0, imaginary = as.integer(gsub('^\\w', '', .y)))
-    } else if (substr(.y, 1, 1) == 'E'){
-      coor <- .x$coor + complex(imaginary = 0, real = as.integer(gsub('^\\w', '', .y)))
-    } else if (substr(.y, 1, 1) == 'W'){
-      coor <- .x$coor - complex(imaginary = 0, real = as.integer(gsub('^\\w', '', .y)))
+one_iteration <- function(i, j, input_mat){
+  if(input_mat[i, j] == '#'){
+    if(sum(neighbors(i, j, input_mat=input_mat) == '#') >= 4){
+      'L'
+    } else{
+      '#'
+    }
+  } else if (input_mat[i, j] == 'L'){
+    if(sum(neighbors(i, j, input_mat = input_mat)=='#') == 0){
+      '#'
     } else {
-      coor <- (.x$dir * as.integer(gsub('^\\w', '', .y))) + .x$coor
+      'L'
     }
-  } else{
-    coor <- .x$coor
-    if(substr(.y, 1, 1) == 'R'){
-      
-    }
+  } else {
+    '.'
   }
 }
 
+# Vectorise the above helper function
+one_iter_vec <- Vectorize(one_iteration, vectorize.args = c('i', 'j'))
+
+# condition for stable state
+my_con <- function(i, j, input_mat){
+  if(input_mat[i, j] == '#'){
+    sum(neighbors(i, j, input_mat=input_mat) == '#') >= 4
+  } else if (input_mat[i, j] == 'L'){
+    sum(neighbors(i, j, input_mat = input_mat)=='#') == 0
+  } else
+    FALSE
+}
+# vectorize above condition
+my_con_vect <- Vectorize(my_con, vectorize.args = c('i', 'j'))
+
+while(any(outer(seq(nrow(mat_1)), seq(ncol(mat_1)), my_con_vect, mat_1))){
+  mat_1 <- outer(seq(nrow(mat_1)), seq(ncol(mat_1)), one_iter_vec, mat_1)
+}
+
+sum(mat_1 == '#')
 
 
+### day 13
 library(tidyverse)
-input <- read_lines('Previous Years/2020/input10.txt')
-input %>% 
+input <- read_lines('Previous Years/2020/input13.txt')
+
+my_time <- input[1] %>% as.integer()
+
+buses <- input[2] %>% 
+  str_split(',') %>% 
+  unlist %>% 
+  {.[. != 'x']} %>% 
   as.integer()
+
+((ceiling(my_time / buses) * buses) - my_time )
+
+(my_time / buses) %>% 
+  ceiling() %>% 
+  {. * buses} %>% 
+  { . - my_time}
+  
+
+
+?ceiling
+trunc(12.3)
+ceiling(1:2 + 0.5)

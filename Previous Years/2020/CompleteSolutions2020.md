@@ -354,9 +354,32 @@ answer10_2(input)
 
 ### Day 13
 
-### [](https://adventofcode.com/2020/day/13)
+### [— Day 13: Shuttle Search —](https://adventofcode.com/2020/day/13)
 
 #### Part-1
+
+``` r
+input <- read_lines('input13.txt')
+answer13_1 <- function(input){
+  my_time <- input[1] %>% as.integer()
+  
+  buses <- input[2] %>% 
+    str_split(',') %>% 
+    unlist %>% 
+    {.[. != 'x']} %>% 
+    as.integer()
+  
+  (my_time / buses) %>% 
+    ceiling() %>% 
+    {. * buses} %>% 
+    { . - my_time} %>% 
+    {buses[which.min(.)]*min(.)}
+}
+
+answer13_1(input)
+```
+
+    ## [1] 3269
 
 #### Part-2
 
