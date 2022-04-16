@@ -2,14 +2,12 @@
 library(tidyverse)
 ```
 
-    ## Warning: package 'tidyverse' was built under R version 4.1.3
-
     ## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
 
     ## v ggplot2 3.3.5     v purrr   0.3.4
-    ## v tibble  3.1.5     v dplyr   1.0.7
+    ## v tibble  3.1.6     v dplyr   1.0.8
     ## v tidyr   1.2.0     v stringr 1.4.0
-    ## v readr   2.0.2     v forcats 0.5.1
+    ## v readr   2.1.2     v forcats 0.5.1
 
     ## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
     ## x dplyr::filter() masks stats::filter()
@@ -346,9 +344,59 @@ answer10_2(input)
 
 ### Day 12
 
-### [](https://adventofcode.com/2020/day/12)
+### [— Day 12: Rain Risk —](https://adventofcode.com/2020/day/12)
 
 #### Part-1
+
+``` r
+input <- read_lines('input12.txt')
+
+answer12_1 <- function(input){
+  
+  init_state <- list(face = 1+0i, point = 0+0i)
+  
+  mod_input <- map(input, ~ list(dir = substr(.x, 1, 1),
+                                 amt = as.integer(substr(.x, 2, nchar(.x)))))
+  
+  my_fun <- function(.x, .y){
+    if(.y$dir == 'E'){
+      list(face = .x$face, point = .x$point + .y$amt)
+    } else if (.y$dir == 'W'){
+      list(face = .x$face, point = .x$point - .y$amt)
+    } else if (.y$dir == 'N'){
+      list(face = .x$face, point = .x$point + complex(real = 0, imaginary = .y$amt))
+    } else if (.y$dir == 'S'){
+      list(face = .x$face, point = .x$point - complex(real = 0, imaginary = .y$amt))
+    } else if (.y$dir == 'F'){
+      list(face = .x$face, point = .x$point + .x$face * .y$amt) 
+    } else if (.y$dir == 'R'){
+      if (.y$amt == 90){
+        list(face = .x$face * (0-1i), point = .x$point)
+      } else if (.y$amt == 180){
+        list(face = .x$face * -1, point = .x$point)
+      } else if (.y$amt == 270){
+        list(face = .x$face * (0+1i), point = .x$point)
+      }
+    } else if (.y$dir == 'L'){
+      if (.y$amt == 90){
+        list(face = .x$face * (0+1i), point = .x$point)
+      } else if (.y$amt == 180){
+        list(face = .x$face * -1, point = .x$point)
+      } else if (.y$amt == 270){
+        list(face = .x$face * (0-1i), point = .x$point)
+      }
+    }
+  }
+  
+  reduce(mod_input, .init = init_state, my_fun) %>% 
+    {.$point} %>% 
+    {abs(Re(.)) + abs(Im(.))}
+}
+
+answer12_1(input)
+```
+
+    ## [1] 381
 
 #### Part-2
 
