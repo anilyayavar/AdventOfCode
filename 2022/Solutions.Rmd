@@ -47,3 +47,20 @@ answer1_2 <- function(input){
 answer1_2(input = input)
 ```
 
+## Day-6 [--- Day 6: Tuning Trouble ---](https://adventofcode.com/2022/day/6#part2)
+```{r}
+input <- readLines('input6.txt') |> str_split('') |> unlist()
+
+answer6 <- function(input, n= 4){
+  i <- 1
+  while (length(unique(input[i:(i+n-1)])) < n) {
+    i <- i + 1  
+  }
+  i+n-1
+}
+# Part-1
+answer6(input=input, n=4)
+# part-2
+answer6(input=input, n=14)
+```
+

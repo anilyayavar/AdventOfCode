@@ -15,3 +15,11 @@ readLines('2022/input1.txt') |>
   summarise(food = sum(input, na.rm = T)) |> 
   slice_max(order_by = food, n=3) |> 
   summarise(sum(food))
+
+############### day-2
+
+
+readLines('2022/input2.txt') |> 
+  as_tibble() |> 
+  set_names('turns') |> 
+  separate(turns, into = c('Me', "You"))
