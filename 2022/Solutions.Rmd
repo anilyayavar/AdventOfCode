@@ -1,0 +1,49 @@
+---
+title: "Advent Of Code 2022"
+author: "Anil Goyal"
+date: "2022-12-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Day - 1 [--- Day 1: Calorie Counting ---](https://adventofcode.com/2022/day/1) 
+### Part-1
+
+```{r}
+input <- readLines('input1.txt') |>  as.numeric()
+
+answer1_1 <- function(input){
+  input |>  
+    as.data.frame() |> 
+    set_names('input') |> 
+    group_by(grp = cumsum(is.na(input))) |> 
+    summarise(food = sum(input, na.rm = T)) |> 
+    slice_max(order_by = food) |> 
+    pull(food)
+}
+
+answer1_1(input = input)
+
+```
+
+### Part-2
+```{r}
+answer1_2 <- function(input){
+  input |> 
+    as.numeric() |> 
+    as.data.frame() |> 
+    set_names('input') |> 
+    group_by(grp = cumsum(is.na(input))) |> 
+    summarise(food = sum(input, na.rm = T)) |> 
+    slice_max(order_by = food, n=3) |> 
+    pull(food) |> 
+    sum()
+}
+
+answer1_2(input = input)
+```
+
