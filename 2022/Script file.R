@@ -1,25 +1,17 @@
 library(tidyverse)
-readLines('2022/input1.txt') |> 
-  as.numeric() |> 
-  as.data.frame() |> 
-  set_names('input') |> 
-  group_by(grp = cumsum(is.na(input))) |> 
-  summarise(food = sum(input, na.rm = T)) |> 
-  slice_max(order_by = food)
 
-readLines('2022/input1.txt') |> 
-  as.numeric() |> 
-  as.data.frame() |> 
-  set_names('input') |> 
-  group_by(grp = cumsum(is.na(input))) |> 
-  summarise(food = sum(input, na.rm = T)) |> 
-  slice_max(order_by = food, n=3) |> 
-  summarise(sum(food))
 
 ############### day-2
 
+input <- readLines('2022/input3.txt')
 
-readLines('2022/input2.txt') |> 
-  as_tibble() |> 
-  set_names('turns') |> 
-  separate(turns, into = c('Me', "You"))
+
+  map2_chr(
+    str_sub(input, start = 1, end = nchar(input)/2),
+    str_sub(input, start = (nchar(input)/2)+1, end = -1L),
+    ~ intersect(unlist(str_split(.x, '')), unlist(str_split(.y, '')))
+  ) %>% 
+    {sum(match(., letters), na.rm = T) + sum(match(., LETTERS) +26, na.rm = T)}
+
+
+  
