@@ -395,6 +395,87 @@ answer1_2(input = input)</code></pre>
 <pre><code>## [1] 212489</code></pre>
 </div>
 </div>
+<div id="day-3-day-3-rucksack-reorganization" class="section level2">
+<h2>Day-3 <a href="https://adventofcode.com/2022/day/3">— Day 3:
+Rucksack Reorganization —</a></h2>
+<div id="part-1-1" class="section level3">
+<h3>Part-1</h3>
+<pre class="r"><code>input &lt;- readLines(&#39;input3.txt&#39;)
+
+answer3_1 &lt;- function(input){
+  map2_chr(
+    str_sub(input, start = 1, end = nchar(input)/2),
+    str_sub(input, start = (nchar(input)/2)+1, end = -1L),
+    ~ intersect(unlist(str_split(.x, &#39;&#39;)), unlist(str_split(.y, &#39;&#39;)))
+  ) %&gt;% 
+    {sum(match(., letters), na.rm = T) + sum(match(., LETTERS) +26, na.rm = T)}
+  
+}
+
+answer3_1(input)</code></pre>
+<pre><code>## [1] 8053</code></pre>
+</div>
+<div id="part-2-1" class="section level3">
+<h3>Part-2</h3>
+<pre class="r"><code>answer3_2 &lt;- function(input){
+    split(input, (seq_along(input) - 1) %/% 3) %&gt;% 
+    map_chr(~ intersect(
+      intersect(
+        unlist(
+          str_split(.x[1], &#39;&#39;)), 
+        unlist(
+          str_split(.x[2], &#39;&#39;))), 
+      unlist(
+        str_split(.x[3], &#39;&#39;)))) %&gt;% 
+    {sum(match(., letters), na.rm = T) + sum(match(., LETTERS) +26, na.rm = T)}
+}
+
+answer3_2(input)</code></pre>
+<pre><code>## [1] 2425</code></pre>
+</div>
+</div>
+<div id="day-4-day-4-camp-cleanup" class="section level2">
+<h2>Day-4 <a href="https://adventofcode.com/2022/day/4">— Day 4: Camp
+Cleanup —</a></h2>
+<div id="part-1-2" class="section level3">
+<h3>part-1</h3>
+<pre class="r"><code>input &lt;- readLines(&#39;input4.txt&#39;)
+answer4_1 &lt;- function(input){
+  input %&gt;% str_split(&#39;,&#39;) %&gt;% 
+  map(~ str_split(.x, &#39;-&#39;) %&gt;% unlist() %&gt;% as.integer()) %&gt;% 
+  map_lgl(~ ((.x[1] &gt;= .x[3]) &amp; (.x[2] &lt;= .x[4])) | ( (.x[1] &lt;= .x[3]) &amp; (.x[2] &gt;= .x[4]) ) ) %&gt;% 
+  sum()
+}
+
+answer4_1(input)</code></pre>
+<pre><code>## [1] 582</code></pre>
+</div>
+<div id="part-2-2" class="section level3">
+<h3>Part-2</h3>
+</div>
+</div>
+<div id="day-5" class="section level2">
+<h2>Day-5 <a href></a></h2>
+</div>
+<div id="day-6-day-6-tuning-trouble" class="section level2">
+<h2>Day-6 <a href="https://adventofcode.com/2022/day/6">— Day 6: Tuning
+Trouble —</a></h2>
+<pre class="r"><code>input &lt;- readLines(&#39;input6.txt&#39;) |&gt; str_split(&#39;&#39;) |&gt; unlist()
+
+answer6 &lt;- function(input, n= 4){
+  i &lt;- 1
+  while (length(unique(input[i:(i+n-1)])) &lt; n) {
+    i &lt;- i + 1  
+  }
+  i+n-1
+}
+# Part-1
+answer6(input=input, n=4)</code></pre>
+<pre><code>## [1] 1566</code></pre>
+<pre class="r"><code># part-2
+answer6(input=input, n=14)</code></pre>
+<pre><code>## [1] 2265</code></pre>
+</div>
 
 
 
