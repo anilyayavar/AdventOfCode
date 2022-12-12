@@ -452,6 +452,16 @@ answer4_1(input)</code></pre>
 </div>
 <div id="part-2-2" class="section level3">
 <h3>Part-2</h3>
+<p>This part is rather easy</p>
+<pre class="r"><code>answer4_2 &lt;- function(input){
+  input %&gt;% str_split(&#39;,&#39;) %&gt;% 
+  map(~ str_split(.x, &#39;-&#39;) %&gt;% unlist() %&gt;% as.integer()) %&gt;% 
+  map_lgl(~ !((.x[4] &lt; .x[1]) | (.x[3] &gt; .x[2])) ) %&gt;% 
+  sum()
+}
+
+answer4_2(input)</code></pre>
+<pre><code>## [1] 893</code></pre>
 </div>
 </div>
 <div id="day-5" class="section level2">

@@ -94,8 +94,16 @@ answer4_1 <- function(input){
 answer4_1(input)
 ```
 ### Part-2
+This part is rather easy
 ```{r}
+answer4_2 <- function(input){
+  input %>% str_split(',') %>% 
+  map(~ str_split(.x, '-') %>% unlist() %>% as.integer()) %>% 
+  map_lgl(~ !((.x[4] < .x[1]) | (.x[3] > .x[2])) ) %>% 
+  sum()
+}
 
+answer4_2(input)
 ```
 
 ## Day-5 []()
