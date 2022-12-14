@@ -128,4 +128,92 @@ answer6(input=input, n=4)
 # part-2
 answer6(input=input, n=14)
 ```
+## Day-12 [--- Day 12: Hill Climbing Algorithm ---](https://adventofcode.com/2022/day/12)
+### Part-1
+```{r}
+input12 <- readLines('input12.txt')
+
+answer12_1 <- function(input){
+
+  len <- nchar(input[1])
+  input %>% 
+    str_split('') %>% 
+    unlist() %>% 
+    {seq_along(.) -1} %>% 
+    {(. %% len)+(. %/% len)*(0+1i)} -> input_nodes
+  
+  names(input_nodes) <- input %>% 
+    str_split('') %>% 
+    unlist()
+  
+  input_nodes1 <- input_nodes
+  from_node <- input_nodes1[names(input_nodes1) == 'S']
+  to_node <- input_nodes1[names(input_nodes1) == 'E']
+  
+  names(input_nodes) <- ifelse(names(input_nodes) == 'S', 
+                               'a', 
+                               ifelse(names(input_nodes) == 'E', 
+                                      'z',
+                                      names(input_nodes)
+                               )
+  )
+  
+  names(input_nodes) <- match(names(input_nodes), letters)
+  
+  cross2(input_nodes, input_nodes, .filter = function(x, y) (Mod(x-y)>1 | x==y) ) %>% 
+    map_df(setNames, c('from', 'to')) %>% 
+    filter(as.integer(names(input_nodes)[match(to, input_nodes)]) - as.integer(names(input_nodes)[match(from, input_nodes)]) <= 1) %>% 
+    graph_from_data_frame() -> gg
+  
+  from_g <- V(gg) %>% names() %>% as.complex() %>% {which(. == from_node)}
+  to_g <- V(gg) %>% names() %>% as.complex() %>% {which(. == to_node)}
+  
+  distances(gg, v = from_g, to_g, mode = 'out', algorithm = 'unweighted')
+}
+answer12_1(input12)
+```
+
+### Part-2
+```{r}
+answer12_2 <- function(input){
+  len <- nchar(input[1])
+  input %>% 
+    str_split('') %>% 
+    unlist() %>% 
+    {seq_along(.) -1} %>% 
+    {(. %% len)+(. %/% len)*(0+1i)} -> input_nodes
+  
+  names(input_nodes) <- input %>% 
+    str_split('') %>% 
+    unlist()
+  
+  input_nodes1 <- input_nodes
+  
+  to_node <- input_nodes1[names(input_nodes1) == 'E']
+  from_nodes <- input_nodes1[names(input_nodes1) == 'a']
+  
+  names(input_nodes) <- ifelse(names(input_nodes) == 'S', 
+                               'a', 
+                               ifelse(names(input_nodes) == 'E', 
+                                      'z',
+                                      names(input_nodes)
+                               )
+  )
+  
+  names(input_nodes) <- match(names(input_nodes), letters)
+  
+  cross2(input_nodes, input_nodes, .filter = function(x, y) (Mod(x-y)>1 | x==y) ) %>% 
+    map_df(setNames, c('from', 'to')) %>% 
+    filter(as.integer(names(input_nodes)[match(to, input_nodes)]) - as.integer(names(input_nodes)[match(from, input_nodes)]) <= 1) %>% 
+    graph_from_data_frame() -> gg
+  
+  
+  to_g <- V(gg) %>% names() %>% as.complex() %>% {which(. == to_node)}
+  
+  from_g2 <- V(gg) %>% names() %>% as.complex() %>% {which(. %in% from_nodes)}
+  
+  distances(gg, v = from_g2, to_g, mode = 'out', algorithm = 'unweighted') %>% min()
+}
+answer12_2(input12)
+```
 
