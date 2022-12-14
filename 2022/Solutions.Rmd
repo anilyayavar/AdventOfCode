@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(igraph)
 ```
 
 ## Day - 1 [--- Day 1: Calorie Counting ---](https://adventofcode.com/2022/day/1) 

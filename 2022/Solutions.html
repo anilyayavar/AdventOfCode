@@ -486,6 +486,99 @@ answer6(input=input, n=4)</code></pre>
 answer6(input=input, n=14)</code></pre>
 <pre><code>## [1] 2265</code></pre>
 </div>
+<div id="day-12-day-12-hill-climbing-algorithm" class="section level2">
+<h2>Day-12 <a href="https://adventofcode.com/2022/day/12">— Day 12: Hill
+Climbing Algorithm —</a></h2>
+<div id="part-1-3" class="section level3">
+<h3>Part-1</h3>
+<pre class="r"><code>input12 &lt;- readLines(&#39;input12.txt&#39;)
+
+answer12_1 &lt;- function(input){
+
+  len &lt;- nchar(input[1])
+  input %&gt;% 
+    str_split(&#39;&#39;) %&gt;% 
+    unlist() %&gt;% 
+    {seq_along(.) -1} %&gt;% 
+    {(. %% len)+(. %/% len)*(0+1i)} -&gt; input_nodes
+  
+  names(input_nodes) &lt;- input %&gt;% 
+    str_split(&#39;&#39;) %&gt;% 
+    unlist()
+  
+  input_nodes1 &lt;- input_nodes
+  from_node &lt;- input_nodes1[names(input_nodes1) == &#39;S&#39;]
+  to_node &lt;- input_nodes1[names(input_nodes1) == &#39;E&#39;]
+  
+  names(input_nodes) &lt;- ifelse(names(input_nodes) == &#39;S&#39;, 
+                               &#39;a&#39;, 
+                               ifelse(names(input_nodes) == &#39;E&#39;, 
+                                      &#39;z&#39;,
+                                      names(input_nodes)
+                               )
+  )
+  
+  names(input_nodes) &lt;- match(names(input_nodes), letters)
+  
+  cross2(input_nodes, input_nodes, .filter = function(x, y) (Mod(x-y)&gt;1 | x==y) ) %&gt;% 
+    map_df(setNames, c(&#39;from&#39;, &#39;to&#39;)) %&gt;% 
+    filter(as.integer(names(input_nodes)[match(to, input_nodes)]) - as.integer(names(input_nodes)[match(from, input_nodes)]) &lt;= 1) %&gt;% 
+    graph_from_data_frame() -&gt; gg
+  
+  from_g &lt;- V(gg) %&gt;% names() %&gt;% as.complex() %&gt;% {which(. == from_node)}
+  to_g &lt;- V(gg) %&gt;% names() %&gt;% as.complex() %&gt;% {which(. == to_node)}
+  
+  distances(gg, v = from_g, to_g, mode = &#39;out&#39;, algorithm = &#39;unweighted&#39;)
+}
+answer12_1(input12)</code></pre>
+<pre><code>##       136+20i
+## 0+20i     504</code></pre>
+</div>
+<div id="part-2-3" class="section level3">
+<h3>Part-2</h3>
+<pre class="r"><code>answer12_2 &lt;- function(input){
+  len &lt;- nchar(input[1])
+  input %&gt;% 
+    str_split(&#39;&#39;) %&gt;% 
+    unlist() %&gt;% 
+    {seq_along(.) -1} %&gt;% 
+    {(. %% len)+(. %/% len)*(0+1i)} -&gt; input_nodes
+  
+  names(input_nodes) &lt;- input %&gt;% 
+    str_split(&#39;&#39;) %&gt;% 
+    unlist()
+  
+  input_nodes1 &lt;- input_nodes
+  
+  to_node &lt;- input_nodes1[names(input_nodes1) == &#39;E&#39;]
+  from_nodes &lt;- input_nodes1[names(input_nodes1) == &#39;a&#39;]
+  
+  names(input_nodes) &lt;- ifelse(names(input_nodes) == &#39;S&#39;, 
+                               &#39;a&#39;, 
+                               ifelse(names(input_nodes) == &#39;E&#39;, 
+                                      &#39;z&#39;,
+                                      names(input_nodes)
+                               )
+  )
+  
+  names(input_nodes) &lt;- match(names(input_nodes), letters)
+  
+  cross2(input_nodes, input_nodes, .filter = function(x, y) (Mod(x-y)&gt;1 | x==y) ) %&gt;% 
+    map_df(setNames, c(&#39;from&#39;, &#39;to&#39;)) %&gt;% 
+    filter(as.integer(names(input_nodes)[match(to, input_nodes)]) - as.integer(names(input_nodes)[match(from, input_nodes)]) &lt;= 1) %&gt;% 
+    graph_from_data_frame() -&gt; gg
+  
+  
+  to_g &lt;- V(gg) %&gt;% names() %&gt;% as.complex() %&gt;% {which(. == to_node)}
+  
+  from_g2 &lt;- V(gg) %&gt;% names() %&gt;% as.complex() %&gt;% {which(. %in% from_nodes)}
+  
+  distances(gg, v = from_g2, to_g, mode = &#39;out&#39;, algorithm = &#39;unweighted&#39;) %&gt;% min()
+}
+answer12_2(input12)</code></pre>
+<pre><code>## [1] 500</code></pre>
+</div>
+</div>
 
 
 
