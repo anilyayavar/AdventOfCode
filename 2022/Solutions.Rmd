@@ -47,6 +47,50 @@ answer1_2 <- function(input){
 
 answer1_2(input = input)
 ```
+## Day-2 [--- Day 2: Rock Paper Scissors ---](https://adventofcode.com/2022/day/2)
+### Part-1
+```{r}
+input <- readLines('input2.txt') %>% 
+  as_tibble() %>% 
+  separate(value, into = c('O', 'M'))
+
+answer2_1 <- function(input){
+  score_matrix <- rbind(A = c(3,6,0), B= c(0,3,6), C = c(6,0,3)) %>% as.matrix() %>% 
+    `colnames<-`(c('X', "Y", "Z"))
+  
+  additional_scores <- c(1,2,3)
+  
+  input %>% 
+    rowwise() %>% 
+    mutate(score = score_matrix[O,M] + additional_scores[match(M, LETTERS[24:26])]) %>% 
+    ungroup() %>% 
+    summarise(sum(score))
+}
+
+answer2_1(input)
+```
+### Part-2
+```{r}
+answer2_2 <- function(input){
+  score_matrix <- rbind(A = c(3,6,0), B= c(0,3,6), C = c(6,0,3)) %>% as.matrix() %>% 
+    `colnames<-`(c('X', "Y", "Z"))
+  
+  additional_scores <- c(1,2,3)
+  rev_matrix <- rbind(A = c('Z', 'X', 'Y'), B= c('X', 'Y', 'Z'), C = c('Y', 'Z', 'X')) %>% as.matrix() %>% 
+    `colnames<-`(c('X', "Y", "Z"))
+  
+  input %>% 
+    rowwise() %>% 
+    mutate(strategy = rev_matrix[O, M],
+           score = score_matrix[O, strategy] + additional_scores[match(strategy, LETTERS[24:26])]) %>% 
+    ungroup() %>% 
+    pull(score) %>% 
+    sum()
+}
+answer2_2(input)
+```
+
+
 ## Day-3 [--- Day 3: Rucksack Reorganization ---](https://adventofcode.com/2022/day/3)
 ### Part-1
 ```{r}
@@ -82,7 +126,7 @@ answer3_2 <- function(input){
 answer3_2(input)
 ```
 ## Day-4 [--- Day 4: Camp Cleanup ---](https://adventofcode.com/2022/day/4)
-### part-1
+### Part-1
 ```{r}
 input <- readLines('input4.txt')
 answer4_1 <- function(input){
@@ -107,9 +151,59 @@ answer4_2 <- function(input){
 answer4_2(input)
 ```
 
-## Day-5 []()
+## Day-5 [--- Day 5: Supply Stacks ---](https://adventofcode.com/2022/day/5)
+### Part-1
 ```{r}
+stacks <- read.fwf("input5.txt", widths = rep(4, 9), n = 8)
 
+moves <- read.table("input5.txt", sep = " ", skip = 10)[, c(2, 4, 6)] %>% 
+  set_names(c('cnt', 'from', 'to'))
+
+answer5_1 <- function(stacks, moves){
+  stacks %>% 
+    as.data.frame() %>% 
+    mutate(across(everything(), ~ str_remove_all(., '\\]'))) %>% 
+    mutate(across(everything(), ~str_remove_all(., " "))) %>% 
+    mutate(across(everything(), ~str_remove_all(., '\\['))) -> stacks_r
+  
+  stacks_r <- map(stacks_r, ~ .x[.x != ''])
+  for(i in seq_len(nrow(moves))){
+    from <- stacks_r[[moves$from[[i]]]]
+    to <- stacks_r[[moves$to[[i]]]]
+    cnt <- moves$cnt[[i]]
+    elements_to_move <- rev(from[seq_len(cnt)])
+    stacks_r[[moves$from[[i]]]] <- from[seq(cnt+1, length(from))]
+    stacks_r[[moves$to[[i]]]] <- c(elements_to_move, to)
+  }
+  map_chr(stacks_r, ~ .x[1]) %>% paste0(collapse = '')
+}
+
+answer5_1(stacks, moves)
+
+```
+
+### Part-2
+```{r}
+answer5_2 <- function(stacks, moves){
+  stacks %>% 
+    as.data.frame() %>% 
+    mutate(across(everything(), ~ str_remove_all(., '\\]'))) %>% 
+    mutate(across(everything(), ~str_remove_all(., " "))) %>% 
+    mutate(across(everything(), ~str_remove_all(., '\\['))) -> stacks_r
+  
+  stacks_r <- map(stacks_r, ~ .x[.x != ''])
+  for(i in seq_len(nrow(moves))){
+    from <- stacks_r[[moves$from[[i]]]]
+    to <- stacks_r[[moves$to[[i]]]]
+    cnt <- moves$cnt[[i]]
+    elements_to_move <- from[seq_len(cnt)]
+    stacks_r[[moves$from[[i]]]] <- from[seq(cnt+1, length(from))]
+    stacks_r[[moves$to[[i]]]] <- c(elements_to_move, to)
+  }
+  map_chr(stacks_r, ~ .x[1]) %>% paste0(collapse = '')
+}
+
+answer5_2(stacks, moves)
 ```
 
 
@@ -163,7 +257,8 @@ answer12_1 <- function(input){
   
   cross2(input_nodes, input_nodes, .filter = function(x, y) (Mod(x-y)>1 | x==y) ) %>% 
     map_df(setNames, c('from', 'to')) %>% 
-    filter(as.integer(names(input_nodes)[match(to, input_nodes)]) - as.integer(names(input_nodes)[match(from, input_nodes)]) <= 1) %>% 
+    filter(as.integer(names(input_nodes)[match(to, input_nodes)]) - 
+             as.integer(names(input_nodes)[match(from, input_nodes)]) <= 1) %>% 
     graph_from_data_frame() -> gg
   
   from_g <- V(gg) %>% names() %>% as.complex() %>% {which(. == from_node)}
@@ -205,7 +300,8 @@ answer12_2 <- function(input){
   
   cross2(input_nodes, input_nodes, .filter = function(x, y) (Mod(x-y)>1 | x==y) ) %>% 
     map_df(setNames, c('from', 'to')) %>% 
-    filter(as.integer(names(input_nodes)[match(to, input_nodes)]) - as.integer(names(input_nodes)[match(from, input_nodes)]) <= 1) %>% 
+    filter(as.integer(names(input_nodes)[match(to, input_nodes)]) - 
+             as.integer(names(input_nodes)[match(from, input_nodes)]) <= 1) %>% 
     graph_from_data_frame() -> gg
   
   

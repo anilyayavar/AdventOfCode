@@ -395,10 +395,60 @@ answer1_2(input = input)</code></pre>
 <pre><code>## [1] 212489</code></pre>
 </div>
 </div>
+<div id="day-2-day-2-rock-paper-scissors" class="section level2">
+<h2>Day-2 <a href="https://adventofcode.com/2022/day/2">— Day 2: Rock
+Paper Scissors —</a></h2>
+<div id="part-1-1" class="section level3">
+<h3>Part-1</h3>
+<pre class="r"><code>input &lt;- readLines(&#39;input2.txt&#39;) %&gt;% 
+  as_tibble() %&gt;% 
+  separate(value, into = c(&#39;O&#39;, &#39;M&#39;))
+
+answer2_1 &lt;- function(input){
+  score_matrix &lt;- rbind(A = c(3,6,0), B= c(0,3,6), C = c(6,0,3)) %&gt;% as.matrix() %&gt;% 
+    `colnames&lt;-`(c(&#39;X&#39;, &quot;Y&quot;, &quot;Z&quot;))
+  
+  additional_scores &lt;- c(1,2,3)
+  
+  input %&gt;% 
+    rowwise() %&gt;% 
+    mutate(score = score_matrix[O,M] + additional_scores[match(M, LETTERS[24:26])]) %&gt;% 
+    ungroup() %&gt;% 
+    summarise(sum(score))
+}
+
+answer2_1(input)</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##   `sum(score)`
+##          &lt;dbl&gt;
+## 1        13565</code></pre>
+</div>
+<div id="part-2-1" class="section level3">
+<h3>Part-2</h3>
+<pre class="r"><code>answer2_2 &lt;- function(input){
+  score_matrix &lt;- rbind(A = c(3,6,0), B= c(0,3,6), C = c(6,0,3)) %&gt;% as.matrix() %&gt;% 
+    `colnames&lt;-`(c(&#39;X&#39;, &quot;Y&quot;, &quot;Z&quot;))
+  
+  additional_scores &lt;- c(1,2,3)
+  rev_matrix &lt;- rbind(A = c(&#39;Z&#39;, &#39;X&#39;, &#39;Y&#39;), B= c(&#39;X&#39;, &#39;Y&#39;, &#39;Z&#39;), C = c(&#39;Y&#39;, &#39;Z&#39;, &#39;X&#39;)) %&gt;% as.matrix() %&gt;% 
+    `colnames&lt;-`(c(&#39;X&#39;, &quot;Y&quot;, &quot;Z&quot;))
+  
+  input %&gt;% 
+    rowwise() %&gt;% 
+    mutate(strategy = rev_matrix[O, M],
+           score = score_matrix[O, strategy] + additional_scores[match(strategy, LETTERS[24:26])]) %&gt;% 
+    ungroup() %&gt;% 
+    pull(score) %&gt;% 
+    sum()
+}
+answer2_2(input)</code></pre>
+<pre><code>## [1] 12424</code></pre>
+</div>
+</div>
 <div id="day-3-day-3-rucksack-reorganization" class="section level2">
 <h2>Day-3 <a href="https://adventofcode.com/2022/day/3">— Day 3:
 Rucksack Reorganization —</a></h2>
-<div id="part-1-1" class="section level3">
+<div id="part-1-2" class="section level3">
 <h3>Part-1</h3>
 <pre class="r"><code>input &lt;- readLines(&#39;input3.txt&#39;)
 
@@ -415,7 +465,7 @@ answer3_1 &lt;- function(input){
 answer3_1(input)</code></pre>
 <pre><code>## [1] 8053</code></pre>
 </div>
-<div id="part-2-1" class="section level3">
+<div id="part-2-2" class="section level3">
 <h3>Part-2</h3>
 <pre class="r"><code>answer3_2 &lt;- function(input){
     split(input, (seq_along(input) - 1) %/% 3) %&gt;% 
@@ -437,8 +487,8 @@ answer3_2(input)</code></pre>
 <div id="day-4-day-4-camp-cleanup" class="section level2">
 <h2>Day-4 <a href="https://adventofcode.com/2022/day/4">— Day 4: Camp
 Cleanup —</a></h2>
-<div id="part-1-2" class="section level3">
-<h3>part-1</h3>
+<div id="part-1-3" class="section level3">
+<h3>Part-1</h3>
 <pre class="r"><code>input &lt;- readLines(&#39;input4.txt&#39;)
 answer4_1 &lt;- function(input){
   input %&gt;% str_split(&#39;,&#39;) %&gt;% 
@@ -450,7 +500,7 @@ answer4_1 &lt;- function(input){
 answer4_1(input)</code></pre>
 <pre><code>## [1] 582</code></pre>
 </div>
-<div id="part-2-2" class="section level3">
+<div id="part-2-3" class="section level3">
 <h3>Part-2</h3>
 <p>This part is rather easy</p>
 <pre class="r"><code>answer4_2 &lt;- function(input){
@@ -464,8 +514,62 @@ answer4_2(input)</code></pre>
 <pre><code>## [1] 893</code></pre>
 </div>
 </div>
-<div id="day-5" class="section level2">
-<h2>Day-5 <a href></a></h2>
+<div id="day-5-day-5-supply-stacks" class="section level2">
+<h2>Day-5 <a href="https://adventofcode.com/2022/day/5">— Day 5: Supply
+Stacks —</a></h2>
+<div id="part-1-4" class="section level3">
+<h3>Part-1</h3>
+<pre class="r"><code>stacks &lt;- read.fwf(&quot;input5.txt&quot;, widths = rep(4, 9), n = 8)
+
+moves &lt;- read.table(&quot;input5.txt&quot;, sep = &quot; &quot;, skip = 10)[, c(2, 4, 6)] %&gt;% 
+  set_names(c(&#39;cnt&#39;, &#39;from&#39;, &#39;to&#39;))
+
+answer5_1 &lt;- function(stacks, moves){
+  stacks %&gt;% 
+    as.data.frame() %&gt;% 
+    mutate(across(everything(), ~ str_remove_all(., &#39;\\]&#39;))) %&gt;% 
+    mutate(across(everything(), ~str_remove_all(., &quot; &quot;))) %&gt;% 
+    mutate(across(everything(), ~str_remove_all(., &#39;\\[&#39;))) -&gt; stacks_r
+  
+  stacks_r &lt;- map(stacks_r, ~ .x[.x != &#39;&#39;])
+  for(i in seq_len(nrow(moves))){
+    from &lt;- stacks_r[[moves$from[[i]]]]
+    to &lt;- stacks_r[[moves$to[[i]]]]
+    cnt &lt;- moves$cnt[[i]]
+    elements_to_move &lt;- rev(from[seq_len(cnt)])
+    stacks_r[[moves$from[[i]]]] &lt;- from[seq(cnt+1, length(from))]
+    stacks_r[[moves$to[[i]]]] &lt;- c(elements_to_move, to)
+  }
+  map_chr(stacks_r, ~ .x[1]) %&gt;% paste0(collapse = &#39;&#39;)
+}
+
+answer5_1(stacks, moves)</code></pre>
+<pre><code>## [1] &quot;WCZTHTMPS&quot;</code></pre>
+</div>
+<div id="part-2-4" class="section level3">
+<h3>Part-2</h3>
+<pre class="r"><code>answer5_2 &lt;- function(stacks, moves){
+  stacks %&gt;% 
+    as.data.frame() %&gt;% 
+    mutate(across(everything(), ~ str_remove_all(., &#39;\\]&#39;))) %&gt;% 
+    mutate(across(everything(), ~str_remove_all(., &quot; &quot;))) %&gt;% 
+    mutate(across(everything(), ~str_remove_all(., &#39;\\[&#39;))) -&gt; stacks_r
+  
+  stacks_r &lt;- map(stacks_r, ~ .x[.x != &#39;&#39;])
+  for(i in seq_len(nrow(moves))){
+    from &lt;- stacks_r[[moves$from[[i]]]]
+    to &lt;- stacks_r[[moves$to[[i]]]]
+    cnt &lt;- moves$cnt[[i]]
+    elements_to_move &lt;- from[seq_len(cnt)]
+    stacks_r[[moves$from[[i]]]] &lt;- from[seq(cnt+1, length(from))]
+    stacks_r[[moves$to[[i]]]] &lt;- c(elements_to_move, to)
+  }
+  map_chr(stacks_r, ~ .x[1]) %&gt;% paste0(collapse = &#39;&#39;)
+}
+
+answer5_2(stacks, moves)</code></pre>
+<pre><code>## [1] &quot;BLSGJSDTS&quot;</code></pre>
+</div>
 </div>
 <div id="day-6-day-6-tuning-trouble" class="section level2">
 <h2>Day-6 <a href="https://adventofcode.com/2022/day/6">— Day 6: Tuning
@@ -489,7 +593,7 @@ answer6(input=input, n=14)</code></pre>
 <div id="day-12-day-12-hill-climbing-algorithm" class="section level2">
 <h2>Day-12 <a href="https://adventofcode.com/2022/day/12">— Day 12: Hill
 Climbing Algorithm —</a></h2>
-<div id="part-1-3" class="section level3">
+<div id="part-1-5" class="section level3">
 <h3>Part-1</h3>
 <pre class="r"><code>input12 &lt;- readLines(&#39;input12.txt&#39;)
 
@@ -522,7 +626,8 @@ answer12_1 &lt;- function(input){
   
   cross2(input_nodes, input_nodes, .filter = function(x, y) (Mod(x-y)&gt;1 | x==y) ) %&gt;% 
     map_df(setNames, c(&#39;from&#39;, &#39;to&#39;)) %&gt;% 
-    filter(as.integer(names(input_nodes)[match(to, input_nodes)]) - as.integer(names(input_nodes)[match(from, input_nodes)]) &lt;= 1) %&gt;% 
+    filter(as.integer(names(input_nodes)[match(to, input_nodes)]) - 
+             as.integer(names(input_nodes)[match(from, input_nodes)]) &lt;= 1) %&gt;% 
     graph_from_data_frame() -&gt; gg
   
   from_g &lt;- V(gg) %&gt;% names() %&gt;% as.complex() %&gt;% {which(. == from_node)}
@@ -534,7 +639,7 @@ answer12_1(input12)</code></pre>
 <pre><code>##       136+20i
 ## 0+20i     504</code></pre>
 </div>
-<div id="part-2-3" class="section level3">
+<div id="part-2-5" class="section level3">
 <h3>Part-2</h3>
 <pre class="r"><code>answer12_2 &lt;- function(input){
   len &lt;- nchar(input[1])
@@ -565,7 +670,8 @@ answer12_1(input12)</code></pre>
   
   cross2(input_nodes, input_nodes, .filter = function(x, y) (Mod(x-y)&gt;1 | x==y) ) %&gt;% 
     map_df(setNames, c(&#39;from&#39;, &#39;to&#39;)) %&gt;% 
-    filter(as.integer(names(input_nodes)[match(to, input_nodes)]) - as.integer(names(input_nodes)[match(from, input_nodes)]) &lt;= 1) %&gt;% 
+    filter(as.integer(names(input_nodes)[match(to, input_nodes)]) - 
+             as.integer(names(input_nodes)[match(from, input_nodes)]) &lt;= 1) %&gt;% 
     graph_from_data_frame() -&gt; gg
   
   
