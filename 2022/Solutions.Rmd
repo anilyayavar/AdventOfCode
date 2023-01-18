@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(igraph)
+library(unglue)
+library(magrittr)
 ```
 
 ## Day - 1 [--- Day 1: Calorie Counting ---](https://adventofcode.com/2022/day/1) 
@@ -223,6 +225,64 @@ answer6(input=input, n=4)
 # part-2
 answer6(input=input, n=14)
 ```
+
+## Day-7 []()
+### Part-1
+
+## Day-8 [--- Day 8: Treetop Tree House ---](https://adventofcode.com/2022/day/8)
+### Part-1
+```{r}
+input <- readLines('input8.txt')
+answer8_1 <- function(input){
+  
+  len <- nchar(input[1])
+  
+  input <- input %>% 
+    str_split('' ) %>% 
+    unlist() %>% 
+    as.integer()
+  
+  
+  names <- complex(real = ((seq_along(input) - 1) %/% len) +1, imaginary = ((seq_along(input) - 1) %% len) +1) %>% 
+    as.character()
+  
+  names(input) <- names
+  
+  
+  res <- c()
+  max_fun <- function(x){if(is.null(x)){-1} else {max(input[as.character(x)])}}
+  
+  for(i in seq_along(input)){
+    
+    j <- as.complex(names[i])
+    
+    left <- if(Re(j)==1){NULL}else{complex(real = seq(Re(j)-1), imaginary = Im(j))}
+    top <- if(Im(j) == 1){NULL}else{complex(real = Re(j), imaginary = seq(Im(j) - 1))}
+    right <- if(Re(j)==99){NULL}else{complex(real = seq(from = Re(j)+1, 99, 1), imaginary = Im(j))}
+    bottom <- if(Im(j) == 99){NULL}else{complex(real = Re(j), imaginary = seq(from = Im(j)+1, 99, 1))}
+    
+    left_max <- max_fun(left)
+    top_max <- max_fun(top)
+    right_max <- max_fun(right)
+    bottom_max <- max_fun(bottom)
+    
+    all_max <- c(left_max, top_max, right_max, bottom_max)
+    cur <- any(all_max < input[i])
+    res <- c(res, cur)
+  }
+  
+  sum(res)
+}
+answer8_1(input)
+```
+### Part-2
+```{r}
+answer8_2 <- function(input){
+  
+}
+```
+
+
 ## Day-12 [--- Day 12: Hill Climbing Algorithm ---](https://adventofcode.com/2022/day/12)
 ### Part-1
 ```{r}
@@ -312,5 +372,42 @@ answer12_2 <- function(input){
   distances(gg, v = from_g2, to_g, mode = 'out', algorithm = 'unweighted') %>% min()
 }
 answer12_2(input12)
+```
+
+## Day-15 [--- Day 15: Beacon Exclusion Zone ---](https://adventofcode.com/2022/day/15)
+### Part-1
+```{r}
+input <- readLines('input15.txt')
+
+answer15_1 <- function(input){
+  patterns <- "Sensor at x={s_x}, y={s_y}: closest beacon is at x={b_x}, y={b_y}"
+  
+  unglue::unglue_data(input, patterns = patterns, convert = TRUE) %>% 
+    as_tibble() %>% 
+    transmute(sensor = s_x+(s_y*1i),
+           beacon = b_x + b_y*1i,
+           dist = sensor-beacon,
+           dist = abs(Re(dist))+abs(Im(dist))) -> data
+  
+  y_pos <- 2000000
+  
+  data %>% 
+    mutate(dist2 = ifelse(dist - abs(Im(sensor)-y_pos)<0, 0, dist - abs(Im(sensor)-y_pos)),
+           from = complex(real = Re(sensor) - dist2, imaginary = y_pos),
+           from = Re(ifelse(from %in% data$beacon, from +1, from)),
+           to = complex(real = Re(sensor) + dist2, imaginary = y_pos),
+           to = Re(ifelse(to %in% data$beacon, to -1, to))) %>% 
+    filter(to>=from) %>% 
+    arrange(from) %>% 
+    mutate(dummy = cummax(lag(to, default = first(to)))) %>% 
+    filter(to > dummy | row_number() ==1) %$% 
+    {length(seq(from=min(from), max(to), by=1))-1}
+}
+  
+answer15_1(input)
+```
+### Part-2
+```{r}
+
 ```
 

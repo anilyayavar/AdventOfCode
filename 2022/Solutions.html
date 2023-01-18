@@ -590,10 +590,72 @@ answer6(input=input, n=4)</code></pre>
 answer6(input=input, n=14)</code></pre>
 <pre><code>## [1] 2265</code></pre>
 </div>
+<div id="day-7" class="section level2">
+<h2>Day-7 <a href></a></h2>
+<div id="part-1-5" class="section level3">
+<h3>Part-1</h3>
+</div>
+</div>
+<div id="day-8-day-8-treetop-tree-house" class="section level2">
+<h2>Day-8 <a href="https://adventofcode.com/2022/day/8">— Day 8: Treetop
+Tree House —</a></h2>
+<div id="part-1-6" class="section level3">
+<h3>Part-1</h3>
+<pre class="r"><code>input &lt;- readLines(&#39;input8.txt&#39;)
+answer8_1 &lt;- function(input){
+  
+  len &lt;- nchar(input[1])
+  
+  input &lt;- input %&gt;% 
+    str_split(&#39;&#39; ) %&gt;% 
+    unlist() %&gt;% 
+    as.integer()
+  
+  
+  names &lt;- complex(real = ((seq_along(input) - 1) %/% len) +1, imaginary = ((seq_along(input) - 1) %% len) +1) %&gt;% 
+    as.character()
+  
+  names(input) &lt;- names
+  
+  
+  res &lt;- c()
+  max_fun &lt;- function(x){if(is.null(x)){-1} else {max(input[as.character(x)])}}
+  
+  for(i in seq_along(input)){
+    
+    j &lt;- as.complex(names[i])
+    
+    left &lt;- if(Re(j)==1){NULL}else{complex(real = seq(Re(j)-1), imaginary = Im(j))}
+    top &lt;- if(Im(j) == 1){NULL}else{complex(real = Re(j), imaginary = seq(Im(j) - 1))}
+    right &lt;- if(Re(j)==99){NULL}else{complex(real = seq(from = Re(j)+1, 99, 1), imaginary = Im(j))}
+    bottom &lt;- if(Im(j) == 99){NULL}else{complex(real = Re(j), imaginary = seq(from = Im(j)+1, 99, 1))}
+    
+    left_max &lt;- max_fun(left)
+    top_max &lt;- max_fun(top)
+    right_max &lt;- max_fun(right)
+    bottom_max &lt;- max_fun(bottom)
+    
+    all_max &lt;- c(left_max, top_max, right_max, bottom_max)
+    cur &lt;- any(all_max &lt; input[i])
+    res &lt;- c(res, cur)
+  }
+  
+  sum(res)
+}
+answer8_1(input)</code></pre>
+<pre><code>## [1] 1779</code></pre>
+</div>
+<div id="part-2-5" class="section level3">
+<h3>Part-2</h3>
+<pre class="r"><code>answer8_2 &lt;- function(input){
+  
+}</code></pre>
+</div>
+</div>
 <div id="day-12-day-12-hill-climbing-algorithm" class="section level2">
 <h2>Day-12 <a href="https://adventofcode.com/2022/day/12">— Day 12: Hill
 Climbing Algorithm —</a></h2>
-<div id="part-1-5" class="section level3">
+<div id="part-1-7" class="section level3">
 <h3>Part-1</h3>
 <pre class="r"><code>input12 &lt;- readLines(&#39;input12.txt&#39;)
 
@@ -636,10 +698,13 @@ answer12_1 &lt;- function(input){
   distances(gg, v = from_g, to_g, mode = &#39;out&#39;, algorithm = &#39;unweighted&#39;)
 }
 answer12_1(input12)</code></pre>
+<pre><code>## Warning: `cross2()` was deprecated in purrr 1.0.0.
+## ℹ Please use `tidyr::expand_grid()` instead.
+## ℹ See &lt;https://github.com/tidyverse/purrr/issues/768&gt;.</code></pre>
 <pre><code>##       136+20i
 ## 0+20i     504</code></pre>
 </div>
-<div id="part-2-5" class="section level3">
+<div id="part-2-6" class="section level3">
 <h3>Part-2</h3>
 <pre class="r"><code>answer12_2 &lt;- function(input){
   len &lt;- nchar(input[1])
@@ -683,6 +748,45 @@ answer12_1(input12)</code></pre>
 }
 answer12_2(input12)</code></pre>
 <pre><code>## [1] 500</code></pre>
+</div>
+</div>
+<div id="day-15-day-15-beacon-exclusion-zone" class="section level2">
+<h2>Day-15 <a href="https://adventofcode.com/2022/day/15">— Day 15:
+Beacon Exclusion Zone —</a></h2>
+<div id="part-1-8" class="section level3">
+<h3>Part-1</h3>
+<pre class="r"><code>input &lt;- readLines(&#39;input15.txt&#39;)
+
+answer15_1 &lt;- function(input){
+  patterns &lt;- &quot;Sensor at x={s_x}, y={s_y}: closest beacon is at x={b_x}, y={b_y}&quot;
+  
+  unglue::unglue_data(input, patterns = patterns, convert = TRUE) %&gt;% 
+    as_tibble() %&gt;% 
+    transmute(sensor = s_x+(s_y*1i),
+           beacon = b_x + b_y*1i,
+           dist = sensor-beacon,
+           dist = abs(Re(dist))+abs(Im(dist))) -&gt; data
+  
+  y_pos &lt;- 2000000
+  
+  data %&gt;% 
+    mutate(dist2 = ifelse(dist - abs(Im(sensor)-y_pos)&lt;0, 0, dist - abs(Im(sensor)-y_pos)),
+           from = complex(real = Re(sensor) - dist2, imaginary = y_pos),
+           from = Re(ifelse(from %in% data$beacon, from +1, from)),
+           to = complex(real = Re(sensor) + dist2, imaginary = y_pos),
+           to = Re(ifelse(to %in% data$beacon, to -1, to))) %&gt;% 
+    filter(to&gt;=from) %&gt;% 
+    arrange(from) %&gt;% 
+    mutate(dummy = cummax(lag(to, default = first(to)))) %&gt;% 
+    filter(to &gt; dummy | row_number() ==1) %$% 
+    {length(seq(from=min(from), max(to), by=1))-1}
+}
+  
+answer15_1(input)</code></pre>
+<pre><code>## [1] 6124805</code></pre>
+</div>
+<div id="part-2-7" class="section level3">
+<h3>Part-2</h3>
 </div>
 </div>
 
