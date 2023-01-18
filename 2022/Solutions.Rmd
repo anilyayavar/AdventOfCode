@@ -278,9 +278,58 @@ answer8_1(input)
 ### Part-2
 ```{r}
 answer8_2 <- function(input){
+  len <- nchar(input[1])
   
+  input <- input %>% 
+    str_split('' ) %>% 
+    unlist() %>% 
+    as.integer()
+  
+  
+  names <- complex(real = ((seq_along(input) - 1) %/% len) +1, imaginary = ((seq_along(input) - 1) %% len) +1) %>% 
+    as.character()
+  
+  names(input) <- names
+  
+  
+  res <- c()
+  
+  view_count <- function(x, y){
+    if(is.null(x)){
+      1
+    } else if (is_empty(which(x >= y))){
+      length(x)
+    } else (min(which(x >= y)))
+  }
+  
+  for(i in seq_along(input)){
+    
+    j <- as.complex(names[i])
+    
+    left <- if(Re(j)==1){NULL}else{complex(real = seq(Re(j)-1), imaginary = Im(j))} %>% as.character() %>% {input[.]}
+    top <- if(Im(j) == 1){NULL}else{complex(real = Re(j), imaginary = seq(Im(j) - 1))} %>% as.character() %>% {input[.]}
+    right <- if(Re(j)==99){NULL}else{complex(real = seq(from = Re(j)+1, 99, 1), imaginary = Im(j))} %>% as.character() %>% {input[.]}
+    bottom <- if(Im(j) == 99){NULL}else{complex(real = Re(j), imaginary = seq(from = Im(j)+1, 99, 1))} %>% as.character() %>% {input[.]}
+    
+    left_v <- view_count(rev(left), input[i])
+    right_v <- view_count(right, input[i])
+    top_v <- view_count(rev(top), input[i])
+    bottom_v <- view_count(bottom, input[i])
+    
+    cur <- prod(left_v, right_v, top_v, bottom_v)
+    res <- c(res, cur)
+  }
+  max(res) 
 }
+
+answer8_2(input)
 ```
+## Day-9 []()
+### Part-1
+```{r}
+
+```
+
 
 
 ## Day-12 [--- Day 12: Hill Climbing Algorithm ---](https://adventofcode.com/2022/day/12)
@@ -409,5 +458,55 @@ answer15_1(input)
 ### Part-2
 ```{r}
 
+```
+
+## Day-25 [--- Day 25: Full of Hot Air ---](https://adventofcode.com/2022/day/25)
+### Part-1
+```{r}
+input <- readLines('input25.txt')
+answer25_1 <- function(input){
+  
+  snafu <- function(x){
+    str_split(x, '') %>% 
+      unlist() %>% 
+      rev() %>% 
+      {case_when(. == '-' ~ '-1',
+                 . == '=' ~ '-2',
+                 TRUE ~ .)} %>% 
+      as.integer() %>% 
+      imap(~ .x * (5^(.y-1))) %>% 
+      unlist() %>% 
+      sum()
+  }
+  
+  snafu_num <- function(num){
+    d <- num
+    res <- c()
+    while(d > 0){
+      d <- num %/% 5
+      r <- num %% 5
+      if(r>=3){
+        d <- d + 1
+        r <- r - 5
+      }
+      res <- c(res, r)
+      num <- d
+    }
+    
+    rev(res) %>% 
+      {case_when(. == -1 ~ '-',
+                 . == '-2' ~ '=',
+                 TRUE ~ as.character(.))} %>% 
+      paste0(collapse = '')
+  }
+  
+  map(input, snafu) %>% 
+    unlist() %>% 
+    sum() %>% 
+    #print(digits=20) %>% 
+    snafu_num()
+}
+
+answer25_1(input)
 ```
 

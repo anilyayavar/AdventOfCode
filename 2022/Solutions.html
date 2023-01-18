@@ -648,14 +648,64 @@ answer8_1(input)</code></pre>
 <div id="part-2-5" class="section level3">
 <h3>Part-2</h3>
 <pre class="r"><code>answer8_2 &lt;- function(input){
+  len &lt;- nchar(input[1])
   
-}</code></pre>
+  input &lt;- input %&gt;% 
+    str_split(&#39;&#39; ) %&gt;% 
+    unlist() %&gt;% 
+    as.integer()
+  
+  
+  names &lt;- complex(real = ((seq_along(input) - 1) %/% len) +1, imaginary = ((seq_along(input) - 1) %% len) +1) %&gt;% 
+    as.character()
+  
+  names(input) &lt;- names
+  
+  
+  res &lt;- c()
+  
+  view_count &lt;- function(x, y){
+    if(is.null(x)){
+      1
+    } else if (is_empty(which(x &gt;= y))){
+      length(x)
+    } else (min(which(x &gt;= y)))
+  }
+  
+  for(i in seq_along(input)){
+    
+    j &lt;- as.complex(names[i])
+    
+    left &lt;- if(Re(j)==1){NULL}else{complex(real = seq(Re(j)-1), imaginary = Im(j))} %&gt;% as.character() %&gt;% {input[.]}
+    top &lt;- if(Im(j) == 1){NULL}else{complex(real = Re(j), imaginary = seq(Im(j) - 1))} %&gt;% as.character() %&gt;% {input[.]}
+    right &lt;- if(Re(j)==99){NULL}else{complex(real = seq(from = Re(j)+1, 99, 1), imaginary = Im(j))} %&gt;% as.character() %&gt;% {input[.]}
+    bottom &lt;- if(Im(j) == 99){NULL}else{complex(real = Re(j), imaginary = seq(from = Im(j)+1, 99, 1))} %&gt;% as.character() %&gt;% {input[.]}
+    
+    left_v &lt;- view_count(rev(left), input[i])
+    right_v &lt;- view_count(right, input[i])
+    top_v &lt;- view_count(rev(top), input[i])
+    bottom_v &lt;- view_count(bottom, input[i])
+    
+    cur &lt;- prod(left_v, right_v, top_v, bottom_v)
+    res &lt;- c(res, cur)
+  }
+  max(res) 
+}
+
+answer8_2(input)</code></pre>
+<pre><code>## [1] 172224</code></pre>
+</div>
+</div>
+<div id="day-9" class="section level2">
+<h2>Day-9 <a href></a></h2>
+<div id="part-1-7" class="section level3">
+<h3>Part-1</h3>
 </div>
 </div>
 <div id="day-12-day-12-hill-climbing-algorithm" class="section level2">
 <h2>Day-12 <a href="https://adventofcode.com/2022/day/12">— Day 12: Hill
 Climbing Algorithm —</a></h2>
-<div id="part-1-7" class="section level3">
+<div id="part-1-8" class="section level3">
 <h3>Part-1</h3>
 <pre class="r"><code>input12 &lt;- readLines(&#39;input12.txt&#39;)
 
@@ -753,7 +803,7 @@ answer12_2(input12)</code></pre>
 <div id="day-15-day-15-beacon-exclusion-zone" class="section level2">
 <h2>Day-15 <a href="https://adventofcode.com/2022/day/15">— Day 15:
 Beacon Exclusion Zone —</a></h2>
-<div id="part-1-8" class="section level3">
+<div id="part-1-9" class="section level3">
 <h3>Part-1</h3>
 <pre class="r"><code>input &lt;- readLines(&#39;input15.txt&#39;)
 
@@ -787,6 +837,59 @@ answer15_1(input)</code></pre>
 </div>
 <div id="part-2-7" class="section level3">
 <h3>Part-2</h3>
+</div>
+</div>
+<div id="day-25-day-25-full-of-hot-air" class="section level2">
+<h2>Day-25 <a href="https://adventofcode.com/2022/day/25">— Day 25: Full
+of Hot Air —</a></h2>
+<div id="part-1-10" class="section level3">
+<h3>Part-1</h3>
+<pre class="r"><code>input &lt;- readLines(&#39;input25.txt&#39;)
+answer25_1 &lt;- function(input){
+  
+  snafu &lt;- function(x){
+    str_split(x, &#39;&#39;) %&gt;% 
+      unlist() %&gt;% 
+      rev() %&gt;% 
+      {case_when(. == &#39;-&#39; ~ &#39;-1&#39;,
+                 . == &#39;=&#39; ~ &#39;-2&#39;,
+                 TRUE ~ .)} %&gt;% 
+      as.integer() %&gt;% 
+      imap(~ .x * (5^(.y-1))) %&gt;% 
+      unlist() %&gt;% 
+      sum()
+  }
+  
+  snafu_num &lt;- function(num){
+    d &lt;- num
+    res &lt;- c()
+    while(d &gt; 0){
+      d &lt;- num %/% 5
+      r &lt;- num %% 5
+      if(r&gt;=3){
+        d &lt;- d + 1
+        r &lt;- r - 5
+      }
+      res &lt;- c(res, r)
+      num &lt;- d
+    }
+    
+    rev(res) %&gt;% 
+      {case_when(. == -1 ~ &#39;-&#39;,
+                 . == &#39;-2&#39; ~ &#39;=&#39;,
+                 TRUE ~ as.character(.))} %&gt;% 
+      paste0(collapse = &#39;&#39;)
+  }
+  
+  map(input, snafu) %&gt;% 
+    unlist() %&gt;% 
+    sum() %&gt;% 
+    #print(digits=20) %&gt;% 
+    snafu_num()
+}
+
+answer25_1(input)</code></pre>
+<pre><code>## [1] &quot;2-1-110-=01-1-0-0==2&quot;</code></pre>
 </div>
 </div>
 
