@@ -10,6 +10,8 @@ data2 <- unglue::unglue_data(input2, patterns = patterns, convert = TRUE)
 
 dr_counts <- max(str_count(data2$draws, ";")) + 1
 
+possible <- c(red = 12, green = 13, blue = 14)
+
 data2 <- data2 %>% 
   separate(col = draws, sep = ";", into = paste0("draw", seq_len(dr_counts)), fill = "right") %>% 
   pivot_longer(starts_with('draw'), names_to = "drawNo", values_drop_na = TRUE) %>% 
@@ -21,12 +23,13 @@ data2 <- data2 %>%
 
 #  Part-1
 data2 %>% 
-  filter((color == "red" & counts > 12) | (color == "green" & counts > 13) | (color == "blue" & counts > 14)) %>% 
+  group_by(game, drawNo) %>% 
+  filter(any(counts > possible[color])) %>% 
   pull(game) %>% 
   unique() %>% 
   # there are 100 games
   {sum(1:100) - sum(.)}
-  
+
 #  Part-2
 data2 %>% 
   group_by(game, color) %>% 
@@ -35,4 +38,6 @@ data2 %>%
   summarise(answer = prod(counts)) %>% 
   summarise(answer = sum(answer)) %>% 
   pull(answer)
+
+
 
