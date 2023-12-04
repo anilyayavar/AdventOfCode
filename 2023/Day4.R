@@ -1,12 +1,9 @@
 library(tidyverse)
 library(unglue)
-
-
 input4 <- readLines("2023/data/input4.txt")
-
 patterns <- "Card{=\\s+}{card}: {wins} | {draws}"
 
-input4[1]
+## Part-1
 unglue_data(input4, patterns = patterns) %>% 
   mutate(wins = str_extract_all(wins, "\\d+"),
          wins = map(wins, as.integer),
@@ -27,6 +24,7 @@ d <- unglue_data(input4, patterns = patterns) %>%
          score = map2_int(draws, wins,
                           ~ sum(.x %in% .y))) 
 
+# Initialise Loop
 ans <- 0
 seqi <- c()
 
@@ -38,6 +36,7 @@ for(i in 1:220){
   seqi <- c(seqi, seq_n)
   ans <- ans + card_nums
 } 
+
 ans
 
 
